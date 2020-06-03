@@ -30,4 +30,4 @@ A customer has the usual master data like name, surname, date of birth, address.
   1) Create invoice
   2) Display all invoices
 
-Translated with www.DeepL.com/Translator (free version)
+
