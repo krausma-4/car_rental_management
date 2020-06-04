@@ -17,15 +17,15 @@ A customer has the usual master data like name, surname, date of birth, address.
   5) List all customers
 2. organize cars
   1) Create new car
-  2) Edit Auto Information
+  2) Edit car Information
   3) Show car details
-  4) Auto delete
+  4) car delete
   5) List all cars
 3. organize rental contracts
-  1) Create a new rental agreement
-  2) Edit rental agreement
-  3) Display joint contract
-  4) List all rental agreements
+  1) Create a new rental contract
+  2) Edit rental contract
+  3) Display contract
+  4) List all rental contract
 4. organise invoices
   1) Create invoice
   2) Display all invoices
