@@ -30,4 +30,6 @@ A customer has the usual master data like name, surname, date of birth, address.
   1) Create invoice
   2) Display all invoices
 
+# Domain Information Model
 
+![Domain_Information_Model](https://github.com/krausma-4/car_rental_management/blob/master/Domain_Information_Model.png)
