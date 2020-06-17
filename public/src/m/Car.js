@@ -49,6 +49,7 @@ Car.retrieveAll = async function (){
   try {
     let carRecords = (await db.collection("cars").get()).docs.map( d => d.data());
     console.log(`${carRecords.length} car records retrieved`);
+    return carRecords;
   }catch( error){
     console.error(`Error getting car records: ${error}`);
   }
@@ -70,7 +71,7 @@ Car.add = async function (slots) {
   console.log(`Car record ${slots.licensePlate} created.`);
 }
 
-Car.update = async function (row) {
+Car.update = async function (slots) {
   if (Object.keys( slots).length > 0) {
     await db.collection("cars").doc(slots.licensePlate).update(slots);
     console.log(`Car record ${slots.licensePlate} modified.`);

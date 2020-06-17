@@ -11,7 +11,7 @@
       for (let carRec of carRecords) {
         let optionEl = document.createElement("option");
         optionEl.text = carRec.licensePlate;
-        optionEl.value = bookRec.licensePlate;
+        optionEl.value = carRec.licensePlate;
         selectCarEl.add( optionEl, null);
       }
       // when a car is selected, fill the form with its data
@@ -40,7 +40,7 @@
     const formEl = document.forms['Car'],
       selectCarEl = formEl.selectCar;
     const slots = {
-      licensePlate: parseInt( formEl.isbn.value),
+      licensePlate: formEl.licensePlate.value,
       manufacturer: formEl.manufacturer.value,
       model: formEl.model.value
     };
