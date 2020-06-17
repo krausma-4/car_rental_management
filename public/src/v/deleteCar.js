@@ -20,7 +20,7 @@
   },
   // Event handler for deleting a book
   handleDeleteButtonClickEvent: async function () {
-    const selectCarEl = document.forms['Car'].selectCar;
+    const selectCarEl = document.forms["Car"].selectCar;
     const licensePlate = selectCarEl.value;
     if (licensePlate) {
       await Car.destroy( licensePlate);
