@@ -48,7 +48,7 @@ class Car {
 Car.retrieveAll = async function (){
   try {
     let carRecords = (await db.collection("cars").get()).docs.map( d => d.data());
-    console.log(`${carRecords.length} car racords retrieved`);
+    console.log(`${carRecords.length} car records retrieved`);
   }catch( error){
     console.error(`Error getting car records: ${error}`);
   }
@@ -103,7 +103,7 @@ Car.generateTestData = function () {
     let carRecord = carRecords[licensePlate];
     db.collection("cars").doc( licensePlate).set( carRecord);
   }
-  console.log(`${Object.keys( bookRecords).length} books saved.`);
+  console.log(`${Object.keys( carRecords).length} cars saved.`);
 };
 
 Car.clearData = function () {

@@ -6,7 +6,7 @@
     setupUserInterface: async function () {
       const tableBodyEl = document.querySelector("table#cars>tbody");
 
-      const carRecords = await CaretPosition.retrieveAll();
+      var carRecords = await Car.retrieveAll();
 
       for (let carRec of carRecords) {
         let row = tableBodyEl.insertRow();
