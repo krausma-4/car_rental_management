@@ -40,6 +40,25 @@ class Car {
   }
 }
 
-Car.prototype = {};
+Car.listAllCars = async function () {
+  if (db.collection("cars")) {
+    let carsCollection = db.collection("cars");
+    let allCars = await carsCollection.get();
+    let carsDocs = allCars.docs;
+    let carsrecords = carsDocs.map(car => car.data());
+  }
+};
 
+Car.listAllInfoOfCar = async function (id) {
+  if(db.collection("cars")){
+    
+  }
+};
 
+Car.create = async function (row) {};
+Car.update = async function (row) {};
+Car.delete = async function (row) {};
+
+Car.generateTestData = function () {};
+
+Car.clearDb = function () {};
