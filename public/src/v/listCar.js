@@ -1,0 +1,19 @@
+
+  /**********************************************
+   * List all Cars
+  **********************************************/
+  pl.v.listCar = {
+    setupUserInterface: async function () {
+      const tableBodyEl = document.querySelector("table#cars>tbody");
+
+      const carRecords = await CaretPosition.retrieveAll();
+
+      for (let carRec of carRecords) {
+        let row = tableBodyEl.insertRow();
+        row.insertCell(-1).textContent = carRec.licensePlate;
+        row.insertCell(-1).textContent = carRec.manufacturer;
+        row.insertCell(-1).textContent = carRec.model;
+        row.insertCell(-1).textContent = carRec.damages;
+      }
+    }
+  };

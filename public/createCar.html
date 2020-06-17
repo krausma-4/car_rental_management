@@ -17,6 +17,11 @@
     
     <script src="src/c/initialize.js"></script>
     <script src="src/m/Car.js"></script>
+    <script src="src/v/createCar.js"></script>
+    <script>
+      window.addEventListener("load", pl.v.createCar.setupUserInterface);
+    </script>
+    
 
 </head>
 <body>
@@ -25,20 +30,33 @@
       <div class="title">    
         <h1>Car Rental</h1>
         <h2>This is your new online app for managing your car rentals</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Main Menu</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
   <main>
-  <div class="wrapper clearfix">
-      <p>For your car rental agency it is now possible to manage the following data sets for cars online:</p>
-      <div class="two-col-menu">
-        <ul class="menu">
-          <li><button tape="button" onclick="location.href='listCars.html';">List all cars</button></li>
-          <li><button type="button" onclick="location.href='createCar.html';">Create a Car</button></li>
-          <li><button tape="button" onclick="location.href='updateCar.html';">Update a Car</button></li>
-          <li><button tape="button" onclick="location.href='deleteCar.html';">Delete a Car</button></li>
-        </ul>
-      </div>
+    <div class="wrapper clearfix">
+      <h1>Add a new car</h1>
+      <form>
+        <div class="field">
+           <label>License Plate: <input type="text" name="licensePlate" /></label>
+        </div>
+        <div class="field">
+           <label>Manufacturer: <input type="text" name="manufacturer" /></label>
+        </div>
+        <div class="field">
+          <label>Model: <input type="text" name="model" /></label>
+       </div>
+        <div class="button-group" style="width:10em;">
+          <button type="submit" name="commit">Save</button>
+        </div>
+      </form>
     </div>
-  </main>
+   </main>
  <footer>
     <div class="foot-content wrapper">
         This app was created following the tutorials of Prof.Dr. Gerd Wagner at
