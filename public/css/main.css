@@ -427,3 +427,7 @@ form div.MultiChoiceWidget > ul > li.added {
         page-break-after: avoid;
     }
 }
+
+#Car-R,#Car-C, #Car-U, #Car-D{
+    display: none;
+}

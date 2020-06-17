@@ -45,20 +45,38 @@ Car.listAllCars = async function () {
     let carsCollection = db.collection("cars");
     let allCars = await carsCollection.get();
     let carsDocs = allCars.docs;
-    let carsrecords = carsDocs.map(car => car.data());
+    let carsrecords = carsDocs.map((car) => car.data());
   }
 };
 
 Car.listAllInfoOfCar = async function (id) {
-  if(db.collection("cars")){
-    
+  if (db.collection("cars")) {
   }
 };
 
-Car.create = async function (row) {};
-Car.update = async function (row) {};
-Car.delete = async function (row) {};
+Car.create = async function (row) {
+  await db.collection("cars").doc(row.licensePlate).set(row);
+};
+Car.update = async function (row) {
+  if (Object.keys(row).length > 0) {
+    await db.collection("cars").doc(row.licensePlate).update(row);
+  }
+};
+Car.delete = async function (id) {
+  await db.collection("cars").doc(id).delete();
+};
 
 Car.generateTestData = function () {};
 
-Car.clearDb = function () {};
+Car.clearDb = function () {
+  if (confirm("Do you really want to delete all cars records?")) {
+    db.collection("cars")
+      .get()
+      .then(function (allCars) {
+        // Delete book docs iteratively
+        allCars.forEach(function (carDocs) {
+          db.collection("cars").doc(carDocs.id).delete();
+        });
+      });
+  }
+};
