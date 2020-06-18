@@ -15,7 +15,8 @@
     const slots = {
       licensePlate: formEl.licensePlate.value,
       manufacturer: formEl.manufacturer.value,
-      model: formEl.model.value
+      model: formEl.model.value,
+      damages: formEl.damages.value
     };
     await Car.add( slots);
     formEl.reset();

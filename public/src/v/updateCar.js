@@ -23,6 +23,7 @@
         formEl.licensePlate.value = carRec.licensePlate;
         formEl.manufacturer.value = carRec.manufacturer;
         formEl.model.value = carRec.model;
+        formEl.damages.value = carRec.damages;
       } else {
         formEl.reset();
       }
@@ -42,7 +43,8 @@
     const slots = {
       licensePlate: formEl.licensePlate.value,
       manufacturer: formEl.manufacturer.value,
-      model: formEl.model.value
+      model: formEl.model.value,
+      damages: formEl.damages.value
     };
     await Car.update(slots);
     // update the selection list option element
