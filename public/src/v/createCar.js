@@ -11,7 +11,7 @@
     },
   // save user input data
   handleSaveButtonClickEvent: async function () {
-    const formEl = document.forms['Car'];
+    const formEl = document.forms["Car"];
     const slots = {
       licensePlate: formEl.licensePlate.value,
       manufacturer: formEl.manufacturer.value,
