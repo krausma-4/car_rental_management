@@ -3,7 +3,7 @@
   **********************************************/
   pl.v.deleteCar = {
     setupUserInterface: async function () {
-      const formEl = document.forms['Car'],
+      const formEl = document.forms["Car"],
           deleteButton = formEl.commit,
           selectCarEl = formEl.selectCar;
       // load all car records
