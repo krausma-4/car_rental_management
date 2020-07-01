@@ -1,23 +1,22 @@
 const car_rental = {
-  m: {},
-  v: { cars: {}, customers: {}, invoice: {}, rentalAgreements: {} },
-  c: { cars: {}, customers: {}, invoice: {}, rentalAgreements: {} },
+    m: {},
+    v: { cars: {}, customers: {}, invoice: {}, rentalAgreements: {} },
+    c: { cars: {}, customers: {}, invoice: {}, rentalAgreements: {} },
 };
 const db = firebase.firestore();
 
-function showChosenSection(idOfElem, functionTOBeLoaded) {
-  var chosenSection = document.getElementById(idOfElem);
+function showChosenSection(idOfElem, idofchosenSection, functionTOBeLoaded) {
+    var chosenSection = document.getElementById(idOfElem);
+    var agreementSection = document.getElementById(idofchosenSection);
+    var optionsDiv = document.getElementById("chosenOption");
 
-  var agreementSection = document.getElementById("Car-M");
-  var optionsDiv = document.getElementById("chosenOption");
+    agreementSection.style.display = "none";
+    optionsDiv.style.display = "block";
+    chosenSection.style.display = "block";
 
-  agreementSection.style.display = "none";
-  optionsDiv.style.display = "block";
-  chosenSection.style.display = "block";
-
-  functionTOBeLoaded.setupUserInterface();
+    functionTOBeLoaded.setupUserInterface();
 }
 
 function refreshUI(htmlFile) {
-  location.href = htmlFile;
+    location.href = htmlFile;
 }

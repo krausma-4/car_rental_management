@@ -23,8 +23,6 @@
     <script src="src/c/initialize.js"></script>
     <script src="src/m/Car.js"></script>
     <script src="src/v/manageCars.js"></script>
-    <script src="src/xxxxx.js"></script>
-    <script src="src/xxxxx.js"></script>
 </head>
 
 <body>
@@ -52,22 +50,22 @@
                 <h1>Manage cars</h1>
                 <ul class="menu">
                     <li>
-                        <button type="button" onclick="showChosenSection('Car-R',car_rental.v.cars.listAllCars)">
+                        <button type="button" onclick="showChosenSection('Car-R','Car-M',car_rental.v.cars.listAllCars)">
                 List all cars
               </button>
                     </li>
                     <li>
-                        <button type="button" onclick="showChosenSection('Car-C',car_rental.v.cars.createCar)">
+                        <button type="button" onclick="showChosenSection('Car-C','Car-M',car_rental.v.cars.createCar)">
                 Add a new car record
               </button>
                     </li>
                     <li>
-                        <button type="button" onclick="showChosenSection('Car-U', car_rental.v.cars.updateCar)">
+                        <button type="button" onclick="showChosenSection('Car-U','Car-M', car_rental.v.cars.updateCar)">
                 Update an car record
               </button>
                     </li>
                     <li>
-                        <button type="button" onclick="showChosenSection('Car-D', car_rental.v.cars.deleteCar)">
+                        <button type="button" onclick="showChosenSection('Car-D','Car-M', car_rental.v.cars.deleteCar)">
                 Delete an car record
               </button>
                     </li>
@@ -132,10 +130,19 @@
                   <select name="selectCar"></select
                 ></label>
                         </div>
-                        <div><label>License Plate: <output name="licensePlate"/></label></div>
-                        <div><label>Manufacturer: <input type="text" name="manufacturer" /></label></div>
-                        <div><label>Model: <input type="text" name="model" /></label></div>
-                        <div><label>Damages: <input type="text" name="damages" /></label></div>
+                        <div>
+                            <label>License Plate: <output name="licensePlate" /></label>
+                        </div>
+                        <div>
+                            <label>Manufacturer: <input type="text" name="manufacturer"
+                /></label>
+                        </div>
+                        <div>
+                            <label>Model: <input type="text" name="model" /></label>
+                        </div>
+                        <div>
+                            <label>Damages: <input type="text" name="damages" /></label>
+                        </div>
                         <div class="button-group" style="width: 10em;">
                             <button type="submit" name="commit">Save</button>
                             <button type="button" onclick="refreshUI('manageCars.html')">

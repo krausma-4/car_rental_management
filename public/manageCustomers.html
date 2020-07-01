@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Handle your Customr Prfile</title>
+    <meta name="description" content="A plain JS app with subtyping and inheritance in class hierarchiess." />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Firebase SDK snippet -->
+    <script src="/__/firebase/7.14.5/firebase-app.js"></script>
+    <script src="/__/firebase/7.14.5/firebase-firestore.js"></script>
+    <!-- Initialize Firebase -->
+    <script src="/__/firebase/init.js"></script>
+
+    <link rel="stylesheet" href="css/normalize.min.css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+    <script src="lib/browserShims.js"></script>
+    <script src="lib/util.js"></script>
+    <script src="lib/errorTypes.js"></script>
+    <script src="lib/Enumeration.js"></script>
+    <script src="src/c/initialize.js"></script>
+    <script src="src/m/Customer.js"></script>
+    <script src="src/v/manageCustomers.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="wrapper clearfix">
+            <div class="title">
+                <h1>Car Rental</h1>
+                <h2>This is your new online app for managing your car rentals</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="manageCustomers.html">Customers</a></li>
+                    <li><a href="manageRentalAgreement.html">Rental Agreements</a></li>
+                    <li><a href="manageInvoices.html">Invoices</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="wrapper clearfix">
+            <!-- ======================================================= -->
+            <section id="Cust-M" class="UI-Page">
+                <!-- ======================================================= -->
+                <h1>Manage cars</h1>
+                <ul class="menu">
+                    <li>
+                        <button type="button" onclick="showChosenSection('Cust-R','Cust-M',car_rental.v.customers.listAllCustomers)">
+                List all customers
+              </button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Cust-C','Cust-M',car_rental.v.customers.createCustomer)">
+                Add a new customer record
+              </button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Cust-U','Cust-M', car_rental.v.customers.updateCustomer)">
+                Update an customer record
+              </button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Cust-D','Cust-M', car_rental.v.customers.deleteCustomer)">
+                Delete an customer record
+              </button>
+                    </li>
+                </ul>
+                <div class="button"><a href="index.html">Back to Main menu</a></div>
+            </section>
+            <div id="chosenOption" style="display: none;">
+                <!-- ======================================================= -->
+                <section id="Cust-R" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>List all customers</h1>
+                    <table id="customers">
+                        <thead>
+                            <tr>
+                                <th>Customer's ID</th>
+                                <th>Name</th>
+                                <th>Surname</th>
+                                <th>Date of Birth</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="button">
+                        <button type="button" onclick="refreshUI('manageCustomers.html')">
+                Back to menu
+              </button>
+                    </div>
+                </section>
+                <!-- ======================================================= -->
+                <form id="Cust-C" name="Cust-C" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Add a new customer</h1>
+                    <form>
+                        <div class="field">
+                            <label>Customer's ID: <input type="text" name="customersId" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Name: <input type="text" name="name" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Surname: <input type="text" name="surname" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Date of Birth: <input type="text" name="birthdate" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Address: <input type="text" name="address" /></label>
+                        </div>
+                        <div class="button-group" style="width: 10em;">
+                            <button id="submitCreate" name="commit">Save</button>
+                            <button type="button" onclick="refreshUI('manageCustomers.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
+
+                <!-- ======================================================= -->
+                <form id="Cust-U" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Update a customer record</h1>
+                    <form>
+                        <div class="select-one">
+                            <label>Select customer:
+                  <select name="selectCustomer"></select
+                ></label>
+                        </div>
+                        <div>
+                            <label>Customer's ID: <output name="customersId" /></label>
+                        </div>
+                        <div>
+                            <label>Name: <input type="text" name="name"
+                /></label>
+                        </div>
+                        <div>
+                            <label>Surname: <input type="text" name="surname" /></label>
+                        </div>
+                        <div>
+                            <label>Date of Birth: <input type="text" name="birthdate" /></label>
+                        </div>
+                        <div>
+                            <label>Address: <input type="text" name="address" /></label>
+                        </div>
+                        <div class="button-group" style="width: 10em;">
+                            <button type="submit" name="commit">Save</button>
+                            <button type="button" onclick="refreshUI('manageCustomers.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
+
+                <!-- ======================================================= -->
+                <form id="Cust-D" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Delete an customer record</h1>
+                    <form>
+                        <div class="select-one">
+                            <label>Select customer-profile:
+                  <select name="selectCustomer"></select
+                ></label>
+                        </div>
+                        <div class="button-group">
+                            <button type="submit" name="commit">Delete</button>
+                            <button type="button" onclick="refreshUI('manageCustomers.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="foot-content wrapper">
+            This app was created following the tutorials of Prof.Dr. Gerd Wagner at
+            <a href="https://www.b-tu.de/fg-internet-technologie/">Chair of Internet Technology</a
+        >, Brandenburg University of Technology, Germany.
+      </div>
+    </footer>
+  </body>
+</html>
