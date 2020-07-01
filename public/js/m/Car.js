@@ -1,11 +1,51 @@
 class Car {
   constructor({ licensePlate, manufacturer, model, damages }) {
-    this.licensePlate = licensePlate;
-    this.manufacturer = manufacturer;
-    this.model = model;
-    if (damages) {
-      this.damages = damages;
+    // set default properties
+    this._licensePlate = "";
+    this._manufacturer = "";
+    this._model = "";
+    this._damages = "";
+    // if arguments set properties
+    if (arguments.length > 0) {
+      this.licensePlate = licensePlate;
+      this.manufacturer = manufacturer;
+      this.model = model;
+      if (damages) {
+        this.damages = damages; // optional
+      }
     }
+  }
+
+  // All basic constraints of the isbn attribute
+  static checkLicensePlate (licensePlate) {
+    if (licensePlate === undefined) return new NoConstraintViolation();
+    else if (typeof(licensePlate) !== "string" || licensePlate.trim() === "") {
+      return new RangeConstraintViolation("The ISBN must be a non-empty string!");
+    } else if (!(/\b\d{9}(\d|X)\b/.test( licensePlate))) { // TODO: isbnRegEx falsch hier
+      return new PatternConstraintViolation(
+        'The ISBN must be a 10-digit string or a 9-digit string followed by "X"!');
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
+  // Mandatory value and uniqueness constraints
+  static async checkIsbnAsId( licensePlate) {
+    let validationResult = Car.checkLicensePlate( licensePlate);
+    if ((validationResult instanceof NoConstraintViolation)) {
+      if (!licensePlate) {
+        validationResult = new MandatoryValueConstraintViolation(
+          "A value for the license plate must be provided!");
+      } else {
+        let car = await db.collection("cars").doc(licensePlate).get();
+        if (car.exists) {
+          validationResult = new UniquenessConstraintViolation(
+              "There is already a car with this license plate!");
+        } else {
+          validationResult = new NoConstraintViolation();
+        }
+      }
+    }
+    return validationResult;
   }
 
   get licensePlate() {
@@ -47,7 +87,7 @@ class Car {
 // get all the cars from Firestore
 Car.retrieveAll = async function (){
   try {
-    let carRecords = (await db.collection("cars").get()).docs.map( d => d.data());
+    const carRecords = (await db.collection("cars").get()).docs.map( d => d.data());
     console.log(`${carRecords.length} car records retrieved`);
     return carRecords;
   }catch( error){
@@ -66,11 +106,13 @@ Car.retrieve = async function (licensePlate) {
 }
 
 // Create a Firestore doc in collection "cars"
+//TODO
 Car.add = async function (slots) {
   await db.collection("cars").doc( slots.licensePlate).set( slots);
   console.log(`Car record ${slots.licensePlate} created.`);
 }
 
+//TODO
 Car.update = async function (slots) {
   if (Object.keys( slots).length > 0) {
     await db.collection("cars").doc(slots.licensePlate).update(slots);
@@ -79,8 +121,12 @@ Car.update = async function (slots) {
 };
 
 Car.destroy = async function (licensePlate) {
-  await db.collection("cars").doc( licensePlate).delete();
-  console.log(`Car record ${licensePlate} deleted.`);
+  try {
+    await db.collection("cars").doc( licensePlate).delete();
+    console.log(`Car record ${licensePlate} deleted.`);
+  } catch( error) {
+    console.error(`Error deleting book record ${error}`);
+  }
 };
 
 
