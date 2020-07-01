@@ -484,6 +484,10 @@ form div.MultiChoiceWidget>ul>li.added {
 #Invoice-R,
 #Invoice-C,
 #Invoice-U,
-#Invoice-D {
+#Invoice-D,
+#Rent-R,
+#Rent-C,
+#Rent-U,
+#Rent-D {
     display: none;
 }
