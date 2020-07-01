@@ -28,6 +28,20 @@
         formEl.reset();
       }
     });
+
+    // add event listeners for responsive validation
+    formEl.manufacturer.addEventListener("input", function () {
+      formEl.manufacturer.setCustomValidity(
+        Car.checkManufacturer( formEl.title.manufacturer).message);
+    });
+    formEl.model.addEventListener("input", function () {
+      formEl.model.setCustomValidity(
+        Car.checkModel( formEl.model.value).message);
+    });
+    formEl.damages.addEventListener("input", function () {
+      formEl.damages.setCustomValidity(
+        Car.checkDamages( formEl.damages.value).message);
+    });
     // set an event handler for the submit/save button
     updateButton.addEventListener("click",
       pl.v.updateCar.handleSaveButtonClickEvent);
@@ -46,9 +60,20 @@
       model: formEl.model.value,
       damages: formEl.damages.value
     };
-    await Car.update(slots);
-    // update the selection list option element
-    selectCarEl.options[selectCarEl.selectedIndex].text = slots.title;
-    formEl.reset();
+    // set error messages in case of constraint violations
+    formEl.manufacturer.setCustomValidity( Car.checkManufacturer( slots.manufacturer).message);
+    formEl.model.setCustomValidity( Book.checkModel( slots.model).message);
+    formEl.damages.setCustomValidity( Book.checkDamages( slots.damages).message);
+
+    if (formEl.checkValidity()) {
+      try{
+        await Car.update(slots);
+        // update the selection list option element
+        selectCarEl.options[selectCarEl.selectedIndex].text = slots.title;
+        formEl.reset();
+      } catch (e) {
+        console.error(`${e.constructor.name}: ${e.message}`)
+      }
+    }
   }
 };
