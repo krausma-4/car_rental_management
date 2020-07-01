@@ -55,7 +55,7 @@
             <li>
               <button
                 type="button"
-                onclick="showChosenSection('Car-R')"
+                onclick="showChosenSection('Car-R',car_rental.v.cars.listAllCars)"
               >
                 List all cars
               </button>
@@ -63,7 +63,7 @@
             <li>
               <button
                 type="button"
-                onclick="showChosenSection('Car-C')"
+                onclick="showChosenSection('Car-C',car_rental.v.cars.createCar)"
               >
                 Add a new car record
               </button>
@@ -71,7 +71,7 @@
             <li>
               <button
                 type="button"
-                onclick="showChosenSection('Car-U')"
+                onclick="showChosenSection('Car-U', car_rental.v.cars.updateCar)"
               >
                 Update an car record
               </button>
@@ -79,7 +79,7 @@
             <li>
               <button
                 type="button"
-                onclick="showChosenSection('Car-D')"
+                onclick="showChosenSection('Car-D', car_rental.v.cars.deleteCar)"
               >
                 Delete an car record
               </button>
@@ -95,8 +95,8 @@
           <table id="cars">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Name</th>
+              <th>License Plate</th><th>Manufacturer</th>
+              <th>Model</th><th>Damages</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -108,18 +108,24 @@
           </div>
         </section>
         <!-- ======================================================= -->
-        <section id="Car-C" class="UI-Page">
+        <form id="Car-C" name ="Cars-C" class="UI-Page">
           <!-- ======================================================= -->
           <h1>Add a new car</h1>
           <form>
             <div class="field">
-              <label>ID: <input type="text" name="personId" /></label>
+              <label>ID: <input type="text" name="licensePlate" /></label>
             </div>
             <div class="field">
-              <label>Name: <input type="text" name="name" /></label>
+              <label>Name: <input type="text" name="manufacturer" /></label>
+            </div>
+            <div class="field">
+              <label>Model: <input type="text" name="model" /></label>
+            </div>
+            <div class="field">
+              <label>Damages: <input type="text" name="damages" /></label>
             </div>
             <div class="button-group" style="width: 10em;">
-              <button type="submit" name="commit">Save</button>
+              <button id="submitCreate" name="commit">Save</button>
               <button type="button" onclick="refreshUI('manageCars.html')">
                 Back to menu
               </button>
@@ -127,7 +133,7 @@
           </form>
         </section>
         <!-- ======================================================= -->
-        <section id="Car-U" class="UI-Page">
+        <form id="Car-U" class="UI-Page">
           <!-- ======================================================= -->
           <h1>Update an car record</h1>
           <form>
@@ -137,12 +143,11 @@
                 <select name="selectCar"></select
               ></label>
             </div>
-            <div class="field">
-              <label>ID: <output name="personId" /></label>
-            </div>
-            <div class="field">
-              <label>Name: <input type="text" name="name" /></label>
-            </div>
+            <div><label>License Plate: <output name="licensePlate"/></label></div>
+       <div><label>Manufacturer: <input type="text" name="manufacturer" /></label></div>
+       <div><label>Model: <input type="text" name="model" /></label></div>
+       <div><label>Damages: <input type="text" name="damages" /></label></div>
+       <div class="button-group" style="width:10em;">
             <div class="button-group" style="width: 10em;">
               <button type="submit" name="commit">Save</button>
               <button type="button" onclick="refreshUI('manageCars.html')">
@@ -152,7 +157,7 @@
           </form>
         </section>
         <!-- ======================================================= -->
-        <section id="Car-D" class="UI-Page">
+        <form id="Car-D" class="UI-Page">
           <!-- ======================================================= -->
           <h1>Delete an car record</h1>
           <form>

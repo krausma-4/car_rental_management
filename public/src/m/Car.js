@@ -40,35 +40,89 @@ class Car {
   }
 }
 
-Car.listAllCars = async function () {
-  if (db.collection("cars")) {
-    let carsCollection = db.collection("cars");
-    let allCars = await carsCollection.get();
-    let carsDocs = allCars.docs;
-    let carsrecords = carsDocs.map((car) => car.data());
+/**********************************
+ * Storage management
+ *********************************/
+
+// get all the cars from Firestore
+Car.retrieveAll = async function () {
+  try {
+    let carRecords = (await db.collection("cars").get()).docs.map((d) =>
+      d.data()
+    );
+    console.log(`${carRecords.length} car records retrieved`);
+    return carRecords;
+  } catch (error) {
+    console.error(`Error getting car records: ${error}`);
   }
 };
 
-Car.listAllInfoOfCar = async function (id) {
-  if (db.collection("cars")) {
+// get only one car from Firestore
+Car.retrieve = async function (licensePlate) {
+  try {
+    let carRecord = (
+      await db.collection("cars").doc(licensePlate).get()
+    ).data();
+    return carRecord;
+  } catch (error) {
+    console.error(`Error getting car records: ${error}`);
   }
 };
 
-Car.create = async function (row) {
-  await db.collection("cars").doc(row.licensePlate).set(row);
+// Create a Firestore doc in collection "cars"
+Car.add = async function (slots) {
+  await db.collection("cars").doc(slots.licensePlate).set(slots);
+  console.log(`Car record ${slots.licensePlate} created.`);
 };
-Car.update = async function (row) {
-  if (Object.keys(row).length > 0) {
-    await db.collection("cars").doc(row.licensePlate).update(row);
+
+Car.update = async function (slots) {
+  if (Object.keys(slots).length > 0) {
+    await db.collection("cars").doc(slots.licensePlate).update(slots);
+    console.log(`Car record ${slots.licensePlate} modified.`);
   }
 };
-Car.delete = async function (id) {
-  await db.collection("cars").doc(id).delete();
+
+Car.destroy = async function (licensePlate) {
+  await db.collection("cars").doc(licensePlate).delete();
+  console.log(`Car record ${licensePlate} deleted.`);
 };
 
-Car.generateTestData = function () {};
+Car.generateTestData = function () {
+  let carRecords = {};
+  carRecords["112233"] = {
+    licensePlate: "112233",
+    manufacturer: "Ford",
+    model: "Fiesta",
+  };
+  carRecords["223344"] = {
+    licensePlate: "223344",
+    manufacturer: "Trabant",
+    model: "601s",
+  };
+  carRecords["334455"] = {
+    licensePlate: "334455",
+    manufacturer: "McLaren",
+    model: "F1",
+  };
+  carRecords["445566"] = {
+    licensePlate: "445566",
+    manufacturer: "Tesla",
+    model: "Model X",
+  };
+  carRecords["556677"] = {
+    licensePlate: "556677",
+    manufacturer: "Toyota",
+    model: "Corolla",
+  };
+  // Save all test Book records to Firestore DB
+  for (let licensePlate of Object.keys(carRecords)) {
+    let carRecord = carRecords[licensePlate];
+    db.collection("cars").doc(licensePlate).set(carRecord);
+  }
+  console.log(`${Object.keys(carRecords).length} cars saved.`);
+};
 
-Car.clearDb = function () {
+Car.clearData = function () {
   if (confirm("Do you really want to delete all cars records?")) {
     db.collection("cars")
       .get()

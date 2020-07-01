@@ -1,15 +1,11 @@
 const car_rental = {
-  cars: {},
-  customers: {},
-  invoice: {},
-  rentalAgreements: {},
+  m: {},
+  v: { cars: {}, customers: {}, invoice: {}, rentalAgreements: {} },
+  c: { cars: {}, customers: {}, invoice: {}, rentalAgreements: {} },
 };
 const db = firebase.firestore();
 
 function showChosenSection(idOfElem, functionTOBeLoaded) {
- // movieWorld.c.initialiseLocalStorage();
-  //functionTOBeLoaded;
-
   var chosenSection = document.getElementById(idOfElem);
 
   var agreementSection = document.getElementById("Car-M");
@@ -18,9 +14,10 @@ function showChosenSection(idOfElem, functionTOBeLoaded) {
   agreementSection.style.display = "none";
   optionsDiv.style.display = "block";
   chosenSection.style.display = "block";
+
+  functionTOBeLoaded.setupUserInterface();
 }
 
-function refreshUI(htmlFile){
-  
-location.href = htmlFile;
+function refreshUI(htmlFile) {
+  location.href = htmlFile;
 }
