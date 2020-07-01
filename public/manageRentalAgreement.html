@@ -23,8 +23,10 @@
     <script src="src/c/initialize.js"></script>
     <script src="src/m/Car.js"></script>
     <script src="src/m/Customer.js"></script>
+    <script src="src/m/RentalAgreement.js"></script>
     <script src="src/v/manageCars.js"></script>
     <script src="src/v/manageCustomers.js"></script>
+    <script src="src/v/manageRentalAgreement.js"></script>
 </head>
 
 <body>
@@ -58,17 +60,17 @@
                     </li>
                     <li>
                         <button type="button" onclick="showChosenSection('Rent-C','Rent-M',car_rental.v.rentalAgreements.createRentAgreement)">
-                Add a new rental Agreement 
+                Add a new rental Agreement
               </button>
                     </li>
                     <li>
                         <button type="button" onclick="showChosenSection('Rent-U','Rent-M', car_rental.v.rentalAgreements.updateRentAgreement)">
-                Update a rental Agreements 
+                Update a rental Agreements
               </button>
                     </li>
                     <li>
                         <button type="button" onclick="showChosenSection('Rent-D','Rent-M', car_rental.v.rentalAgreements.deleteRentAgreement)">
-                Delete a rental Agreements 
+                Delete a rental Agreements
               </button>
                     </li>
                 </ul>
@@ -104,13 +106,18 @@
                     <h1>Add a new rental Agreement</h1>
                     <form>
                         <div class="field">
-                            <label>Invoce's ID: <input type="text" name="invoiceId" /></label>
+                            <label>Invoce's ID: <input type="text" name="invoiceId"
+                /></label>
                         </div>
                         <div class="field">
-                            <label>Customer: <input type="text" name="customer" /></label>
+                            <label>Customer:
+                  <select type="text" name="customer"></select
+                ></label>
                         </div>
                         <div class="field">
-                            <label>Car: <input type="text" name="car" /></label>
+                            <label>Car:
+                  <select type="text" name="car"></select
+                ></label>
                         </div>
                         <div class="field">
                             <label>Start Date: <input type="text" name="start" /></label>
@@ -121,7 +128,7 @@
                         <div class="field">
                             <label>Price: <input type="text" name="price" /></label>
                         </div>
-                        Rent
+
                         <div class="button-group" style="width: 10em;">
                             <button id="submitCreate" name="commit">Save</button>
                             <button type="button" onclick="refreshUI('manageRentalAgreement.html')">
@@ -144,12 +151,15 @@
                         <div>
                             <label>Invoice's ID: <output name="invoiceId" /></label>
                         </div>
-                        <div>
-                            <label>Customer: <input type="text" name="customer"
-                /></label>
+                        <div class="field">
+                            <label>Customer:
+                  <select type="text" name="customer"></select
+                ></label>
                         </div>
-                        <div>
-                            <label>Car: <input type="text" name="car" /></label>
+                        <div class="field">
+                            <label>Car:
+                  <select type="text" name="car"></select
+                ></label>
                         </div>
                         <div>
                             <label>start Date: <input type="text" name="start" /></label>
@@ -161,7 +171,6 @@
                             <label>Price: <input type="text" name="price" /></label>
                         </div>
 
-                        Rent
                         <div class="button-group" style="width: 10em;">
                             <button type="submit" name="commit">Save</button>
                             <button type="button" onclick="refreshUI('manageRentalAgreement.html')">

@@ -65,9 +65,9 @@ body {
 
 :root {
     /* pseudo-class used for variable definitions */
-    --light-bg-color: goldenrod;
+    --light-bg-color: mediumseagreen;
     /*  #f16529 */
-    --dark-bg-color: darkgoldenrod;
+    --dark-bg-color: seagreen;
     /*  #e44d26 */
     /* --light-bg-color: forestgreen;
     --dark-bg-color: darkgreen;
