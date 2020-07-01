@@ -1,10 +1,18 @@
 class Car {
     constructor({ licensePlate, manufacturer, model, damages }) {
-        this.licensePlate = licensePlate;
-        this.manufacturer = manufacturer;
-        this.model = model;
-        if (damages) {
-            this.damages = damages;
+        // set default properties
+        this._licensePlate = "";
+        this._manufacturer = "";
+        this._model = "";
+        this._damages = "";
+        // if arguments set properties
+        if (arguments.length > 0) {
+            this.licensePlate = licensePlate;
+            this.manufacturer = manufacturer;
+            this.model = model;
+            if (damages) {
+                this.damages = damages; // optional
+            }
         }
     }
 
@@ -71,6 +79,7 @@ Car.retrieve = async function(licensePlate) {
 
 // Create a Firestore doc in collection "cars"
 Car.add = async function(slots) {
+
     await db.collection("cars").doc(slots.licensePlate).set(slots);
     console.log(`Car record ${slots.licensePlate} created.`);
 };
@@ -87,7 +96,7 @@ Car.destroy = async function(licensePlate) {
         await db.collection("cars").doc(licensePlate).delete();
         console.log(`Car record ${licensePlate} deleted.`);
     } catch (error) {
-        console.error(`Error deleting book record ${error}`);
+        console.error(`Error deleting car record ${error}`);
     }
 };
 
