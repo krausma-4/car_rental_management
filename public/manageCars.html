@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <title>Handle your Car Rental</title>
-    <meta
-      name="description"
-      content="A plain JS app with subtyping and inheritance in class hierarchiess."
-    />
+    <meta name="description" content="A plain JS app with subtyping and inheritance in class hierarchiess." />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Firebase SDK snippet -->
@@ -27,162 +25,151 @@
     <script src="src/v/manageCars.js"></script>
     <script src="src/xxxxx.js"></script>
     <script src="src/xxxxx.js"></script>
-  </head>
-  <body>
+</head>
+
+<body>
     <header>
-      <div class="wrapper clearfix">
-        <div class="title">
-          <h1>Car Rental</h1>
-          <h2>This is your new online app for managing your car rentals</h2>
+        <div class="wrapper clearfix">
+            <div class="title">
+                <h1>Car Rental</h1>
+                <h2>This is your new online app for managing your car rentals</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Startseite</a></li>
+                    <li><a href="manageCustomers.html">Customers</a></li>
+                    <li><a href="manageRentalAgreement.html">Rental Agreements</a></li>
+                    <li><a href="manageInvoices.html">Invoices</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-          <ul>
-            <li><a href="index.html">Startseite</a></li>
-            <li><a href="manageCustomers.html">Customers</a></li>
-            <li><a href="manageRentalAgreement.html">Rental Agreements</a></li>
-            <li><a href="manageInvoices.html">Invoices</a></li>
-          </ul>
-        </nav>
-      </div>
     </header>
     <main>
-      <div class="wrapper clearfix">
-        <!-- ======================================================= -->
-        <section id="Car-M" class="UI-Page">
-          <!-- ======================================================= -->
-          <h1>Manage cars</h1>
-          <ul class="menu">
-            <li>
-              <button
-                type="button"
-                onclick="showChosenSection('Car-R',car_rental.v.cars.listAllCars)"
-              >
+        <div class="wrapper clearfix">
+            <!-- ======================================================= -->
+            <section id="Car-M" class="UI-Page">
+                <!-- ======================================================= -->
+                <h1>Manage cars</h1>
+                <ul class="menu">
+                    <li>
+                        <button type="button" onclick="showChosenSection('Car-R',car_rental.v.cars.listAllCars)">
                 List all cars
               </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                onclick="showChosenSection('Car-C',car_rental.v.cars.createCar)"
-              >
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Car-C',car_rental.v.cars.createCar)">
                 Add a new car record
               </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                onclick="showChosenSection('Car-U', car_rental.v.cars.updateCar)"
-              >
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Car-U', car_rental.v.cars.updateCar)">
                 Update an car record
               </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                onclick="showChosenSection('Car-D', car_rental.v.cars.deleteCar)"
-              >
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Car-D', car_rental.v.cars.deleteCar)">
                 Delete an car record
               </button>
-            </li>
-          </ul>
-          <div class="button"><a href="index.html">Back to Main menu</a></div>
-        </section>
-        <div id="chosenOption" style="display: none">
-        <!-- ======================================================= -->
-        <section id="Car-R" class="UI-Page">
-          <!-- ======================================================= -->
-          <h1>List all cars</h1>
-          <table id="cars">
-            <thead>
-              <tr>
-              <th>License Plate</th><th>Manufacturer</th>
-              <th>Model</th><th>Damages</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-          <div class="button">
-            <button type="button" onclick="refreshUI('manageCars.html')">
-              Back to menu
-            </button>
-          </div>
-        </section>
-        <!-- ======================================================= -->
-        <form id="Car-C" name ="Cars-C" class="UI-Page">
-          <!-- ======================================================= -->
-          <h1>Add a new car</h1>
-          <form>
-            <div class="field">
-              <label>ID: <input type="text" name="licensePlate" /></label>
-            </div>
-            <div class="field">
-              <label>Name: <input type="text" name="manufacturer" /></label>
-            </div>
-            <div class="field">
-              <label>Model: <input type="text" name="model" /></label>
-            </div>
-            <div class="field">
-              <label>Damages: <input type="text" name="damages" /></label>
-            </div>
-            <div class="button-group" style="width: 10em;">
-              <button id="submitCreate" name="commit">Save</button>
-              <button type="button" onclick="refreshUI('manageCars.html')">
+                    </li>
+                </ul>
+                <div class="button"><a href="index.html">Back to Main menu</a></div>
+            </section>
+            <div id="chosenOption" style="display: none;">
+                <!-- ======================================================= -->
+                <section id="Car-R" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>List all cars</h1>
+                    <table id="cars">
+                        <thead>
+                            <tr>
+                                <th>License Plate</th>
+                                <th>Manufacturer</th>
+                                <th>Model</th>
+                                <th>Damages</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="button">
+                        <button type="button" onclick="refreshUI('manageCars.html')">
                 Back to menu
               </button>
+                    </div>
+                </section>
+                <!-- ======================================================= -->
+                <form id="Car-C" name="Cars-C" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Add a new car</h1>
+                    <form>
+                        <div class="field">
+                            <label>ID: <input type="text" name="licensePlate" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Name: <input type="text" name="manufacturer" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Model: <input type="text" name="model" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Damages: <input type="text" name="damages" /></label>
+                        </div>
+                        <div class="button-group" style="width: 10em;">
+                            <button id="submitCreate" name="commit">Save</button>
+                            <button type="button" onclick="refreshUI('manageCars.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
+
+                <!-- ======================================================= -->
+                <form id="Car-U" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Update an car record</h1>
+                    <form>
+                        <div class="select-one">
+                            <label>Select car:
+                  <select name="selectCar"></select
+                ></label>
+                        </div>
+                        <div><label>License Plate: <output name="licensePlate"/></label></div>
+                        <div><label>Manufacturer: <input type="text" name="manufacturer" /></label></div>
+                        <div><label>Model: <input type="text" name="model" /></label></div>
+                        <div><label>Damages: <input type="text" name="damages" /></label></div>
+                        <div class="button-group" style="width: 10em;">
+                            <button type="submit" name="commit">Save</button>
+                            <button type="button" onclick="refreshUI('manageCars.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
+
+                <!-- ======================================================= -->
+                <form id="Car-D" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Delete an car record</h1>
+                    <form>
+                        <div class="select-one">
+                            <label>Select car:
+                  <select name="selectCar"></select
+                ></label>
+                        </div>
+                        <div class="button-group">
+                            <button type="submit" name="commit">Delete</button>
+                            <button type="button" onclick="refreshUI('manageCars.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
             </div>
-          </form>
-        </section>
-        <!-- ======================================================= -->
-        <form id="Car-U" class="UI-Page">
-          <!-- ======================================================= -->
-          <h1>Update an car record</h1>
-          <form>
-            <div class="select-one">
-              <label
-                >Select car:
-                <select name="selectCar"></select
-              ></label>
-            </div>
-            <div><label>License Plate: <output name="licensePlate"/></label></div>
-       <div><label>Manufacturer: <input type="text" name="manufacturer" /></label></div>
-       <div><label>Model: <input type="text" name="model" /></label></div>
-       <div><label>Damages: <input type="text" name="damages" /></label></div>
-       <div class="button-group" style="width:10em;">
-            <div class="button-group" style="width: 10em;">
-              <button type="submit" name="commit">Save</button>
-              <button type="button" onclick="refreshUI('manageCars.html')">
-                Back to menu
-              </button>
-            </div>
-          </form>
-        </section>
-        <!-- ======================================================= -->
-        <form id="Car-D" class="UI-Page">
-          <!-- ======================================================= -->
-          <h1>Delete an car record</h1>
-          <form>
-            <div class="select-one">
-              <label
-                >Select car:
-                <select name="selectCar"></select
-              ></label>
-            </div>
-            <div class="button-group">
-              <button type="submit" name="commit">Delete</button>
-              <button type="button" onclick="refreshUI('manageCars.html')">
-                Back to menu
-              </button>
-            </div>
-          </form>
-        </section>
         </div>
-      </div>
     </main>
     <footer>
-      <div class="foot-content wrapper">
-        This app was created following the tutorials of Prof.Dr. Gerd Wagner at
-        <a href="https://www.b-tu.de/fg-internet-technologie/"
-          >Chair of Internet Technology</a
+        <div class="foot-content wrapper">
+            This app was created following the tutorials of Prof.Dr. Gerd Wagner at
+            <a href="https://www.b-tu.de/fg-internet-technologie/">Chair of Internet Technology</a
         >, Brandenburg University of Technology, Germany.
       </div>
     </footer>
