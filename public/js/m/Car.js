@@ -4,7 +4,7 @@ class Car {
     this._licensePlate = "";
     this._manufacturer = "";
     this._model = "";
-    this._damages = "";
+    this._damages = "no damages";
     // if arguments set properties
     if (arguments.length > 0) {
       this.licensePlate = licensePlate;
@@ -16,20 +16,17 @@ class Car {
     }
   }
 
-  // All basic constraints of the isbn attribute
+  // All basic constraints of the license plate attribute
   static checkLicensePlate (licensePlate) {
     if (licensePlate === undefined) return new NoConstraintViolation();
     else if (typeof(licensePlate) !== "string" || licensePlate.trim() === "") {
       return new RangeConstraintViolation("The ISBN must be a non-empty string!");
-    } else if (!(/\b\d{9}(\d|X)\b/.test( licensePlate))) { // TODO: isbnRegEx falsch hier
-      return new PatternConstraintViolation(
-        'The ISBN must be a 10-digit string or a 9-digit string followed by "X"!');
     } else {
       return new NoConstraintViolation();
     }
   }
   // Mandatory value and uniqueness constraints
-  static async checkIsbnAsId( licensePlate) {
+  static async checkLicensePlateAsId( licensePlate) {
     let validationResult = Car.checkLicensePlate( licensePlate);
     if ((validationResult instanceof NoConstraintViolation)) {
       if (!licensePlate) {
@@ -53,30 +50,77 @@ class Car {
   }
 
   set licensePlate(id) {
+    const validationResult = Car.checkLicensePlate( id);
+    if (validationResult instanceof NoConstraintViolation) {
     this._licensePlate = id;
+    } else {
+      throw validationResult;
+    }
+  }  
+  static checkManufacturer (man) {
+    if (man === undefined) {
+      return new MandatoryValueConstraintViolation("A manufacturer must be provided!");    
+    } else if (!util.isNonEmptyString( man)) {
+      return new RangeConstraintViolation("The manufacturer must be a non-empty string!");
+    } else {
+      return new NoConstraintViolation();
+    }
   }
-
   get manufacturer() {
     return _manufacturer;
   }
   set manufacturer(man) {
-    this._manufacturer = man;
+    const validationResult = Car.checkManufacturer( man);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._manufaturer = man;
+    } else {
+      throw validationResult;
+    }
   }
-
+  static checkModel (mod) {
+    if (mod === undefined) {
+      return new MandatoryValueConstraintViolation("A model must be provided!");    
+    } else if (!util.isNonEmptyString( mod)) {
+      return new RangeConstraintViolation("The model must be a non-empty string!");
+    } else {
+      return new NoConstraintViolation();
+    }
+  }
   get model() {
     return _model;
   }
-
   set model(mod) {
-    this._model = mod;
+    const validationResult = Car.checkModel( mod);
+    if (validationResult instanceof NoConstraintViolation) {
+      this._model = mod;
+    } else {
+      throw validationResult;
+    }
   }
-
+  static checkDamages ( dam) {
+    // the "edition" attribute is optional
+    if (dam === undefined || dam === "") return new NoConstraintViolation();
+    else {
+      if (util.isIntegerOrIntegerString(dam)) {
+        return new RangeConstraintViolation(
+          "Please describe the damage in plain text!");
+      } else {
+        return new NoConstraintViolation();
+      }
+    }
+  }
   get damages() {
     return _damages;
   }
 
   set damages(allDamages) {
-    this._damages = allDamages;
+    const validationResult = Car.checkDamages( dam);
+    if (validationResult instanceof NoConstraintViolation) {
+      if (dam === undefined || dam === "") delete this.damages;  // unset optional property
+      else this.damages = dam;
+    } else {
+      throw validationResult;
+    }
   }
 }
 
@@ -106,17 +150,66 @@ Car.retrieve = async function (licensePlate) {
 }
 
 // Create a Firestore doc in collection "cars"
-//TODO
 Car.add = async function (slots) {
+  let validationResult = await Car.checkLicensePlateAsId( slots.licensePlate);
+  if (!(validationResult instanceof NoConstraintViolation)) {
+    throw validationResult;
+  }
+  validationResult = Car.checkManufacturer( slots.manufacturer);
+  if (!(validationResult instanceof NoConstraintViolation)) {
+    throw validationResult;
+  }
+  validationResult = Car.checkModel( slots.model);
+  if (!(validationResult instanceof NoConstraintViolation)) {
+    throw validationResult;
+  }
+  validationResult = Car.checkDamages( slots.damages);
+  if (!(validationResult instanceof NoConstraintViolation)) {
+    throw validationResult;
+  }  
   await db.collection("cars").doc( slots.licensePlate).set( slots);
   console.log(`Car record ${slots.licensePlate} created.`);
 }
 
-//TODO
 Car.update = async function (slots) {
-  if (Object.keys( slots).length > 0) {
-    await db.collection("cars").doc(slots.licensePlate).update(slots);
-    console.log(`Car record ${slots.licensePlate} modified.`);
+  // retrieve up-to-date car record
+  const carRec = (await db.collection("cars").doc( slots.licensePlate).get()).data();
+  const updatedSlots = {};
+  let validationResult = null;
+  if (carRec.manufacturer !== slots.manufacturer) {
+    validationResult = Car.checkManufacturer( slots.manufacturer);
+    if (validationResult instanceof NoConstraintViolation) {
+      updatedSlots.manufacturer = slots.manufacturer;
+    } else {
+      throw validationResult;
+    }
+  }
+  if (carRec.model !== slots.model) {
+    validationResult = Car.checkModel( slots.model);
+    if (validationResult instanceof NoConstraintViolation) {
+      updatedSlots.model = slots.model;
+    } else {
+      throw validationResult;
+    }
+  }
+  if (slots.damages && slots.damages !== carRec.damages) {
+    // slots.damages has a non-empty value that is different from the old value
+    validationResult = Car.checkDamages( slots.damages);
+    if (validationResult instanceof NoConstraintViolation) {
+      updatedSlots.damages = slots.damages;
+    } else {
+      throw validationResult;
+    }
+  } else if (!slots.damages && carRec.damages !== undefined) {
+    // slots.damages has an empty value while the old value was not empty
+    updatedSlots.damages = firebase.firestore.FieldValue.delete();
+  }
+  let updatedProperties = Object.keys( updatedSlots);
+  if (updatedProperties.length > 0) {
+    await db.collection("cars").doc(slots.licensePlate).update(updatedSlots);
+    console.log(`Car record ${updatedSlots.licensePlate} modified: ${updatedProperties.toString()}`);
+  } else {
+    console.log(`No property value changed for car record ${slots.licensePlate} !`);
   }
 };
 
