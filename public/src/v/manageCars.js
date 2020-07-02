@@ -17,7 +17,26 @@ car_rental.v.cars.listAllCars = {
 car_rental.v.cars.createCar = {
     setupUserInterface: function() {
         const saveButton = document.forms["Cars-C"].commit;
+        const formEl = document.forms["Cars-C"];
         // set an event handler for the submit/save button
+
+        formEl.licensePlate.addEventListener("input", function() {
+            const validationResult = Car.checkLicensePlate(formEl.licensePlate.value);
+            formEl.licensePlate.setCustomValidity(validationResult.message);
+        });
+        formEl.manufacturer.addEventListener("input", function() {
+            const validationResult = Car.checkManufacturer(formEl.manufacturer.value);
+            formEl.manufacturer.setCustomValidity(validationResult.message);
+        });
+        formEl.model.addEventListener("input", function() {
+            const validationResult = Car.checkModel(formEl.model.value);
+            formEl.model.setCustomValidity(validationResult.message);
+        });
+        formEl.damages.addEventListener("input", function() {
+            const validationResult = Car.checkDamages(formEl.damages.value);
+            formEl.damages.setCustomValidity(validationResult.message);
+        });
+
         saveButton.addEventListener(
             "click",
             car_rental.v.cars.createCar.handleSaveButtonClickEvent
@@ -32,9 +51,10 @@ car_rental.v.cars.createCar = {
             model: formEl.model.value,
             damages: formEl.damages.value,
         };
-        alert("I am creatting now");
-        await Car.add(slots);
-        formEl.reset();
+        if (formEl.checkValidity()) {
+            await Car.add(slots);
+            formEl.reset();
+        }
     },
 };
 

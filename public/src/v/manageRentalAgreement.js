@@ -99,7 +99,6 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         let customer = custRecord,
             car = carRecord;
 
-
         for (let custRec of allCustomers) {
             let optionEl = document.createElement("option");
             optionEl.text = custRec.name;
@@ -116,10 +115,8 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
 
         selectCustEl.addEventListener("change", function() {
             for (let custRec of allCustomers) {
-
                 if (custRec.customersId === selectCustEl.value) {
                     customer = custRec;
-
                 }
             }
         });
@@ -175,5 +172,34 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
 };
 
 car_rental.v.rentalAgreements.deleteRentAgreement = {
-    setupUserInterface: async function() {},
+    setupUserInterface: async function() {
+        const formEl = document.forms["Rent-D"],
+            deleteButton = formEl.commit,
+            selectRentEl = formEl.selectRent;
+        // load all car records
+
+        const rentRecords = await RentalAgreement.retrieveAll();
+        for (let rentRec of rentRecords) {
+            let optionEl = document.createElement("option");
+            optionEl.text = rentRec.invoiceId;
+            optionEl.value = rentRec.invoiceId;
+            selectRentEl.add(optionEl, null);
+        }
+
+        // Set an event handler for the submit/delete button
+        deleteButton.addEventListener(
+            "click",
+            car_rental.v.rentalAgreements.deleteRentAgreement.handleDeleteButtonClickEvent
+        );
+    },
+    // Event handler for deleting a book
+    handleDeleteButtonClickEvent: async function() {
+        const selectRentEl = document.forms["Rent-D"].selectRent;
+        const invoiceID = selectRentEl.value;
+        if (invoiceID) {
+            await RentalAgreement.destroy(invoiceID);
+            // remove deleted book from select options
+            selectRentEl.remove(selectRentEl.selectedIndex);
+        }
+    },
 };
