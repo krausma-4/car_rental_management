@@ -91,6 +91,7 @@ RentalAgreement.add = async function(slots) {
 };
 
 RentalAgreement.update = async function(slots) {
+
     if (Object.keys(slots).length > 0) {
         await db.collection("rentalAgreements").doc(slots.invoiceId).update(slots);
         console.log(`Rent record ${slots.invoiceId} modified.`);
@@ -108,7 +109,7 @@ RentalAgreement.destroy = async function(rentID) {
 
 RentalAgreement.generateTestData = function() {
     let rentRecords = {};
-    rentRecords["11344"] = {
+    rentRecords["112233"] = {
         invoiceId: "112233",
         customer: {
             customersId: "12",
@@ -122,7 +123,7 @@ RentalAgreement.generateTestData = function() {
         endDate: Date(12 - 05 - 1995),
         price: "179,98",
     };
-    rentRecords["2143245"] = {
+    rentRecords["123467"] = {
         invoiceId: "123467",
         customer: {
             customersId: "12",
