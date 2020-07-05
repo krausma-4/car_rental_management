@@ -30,8 +30,10 @@ class Car {
         // Mandatory value and uniqueness constraints
     static async checkLicensePlateAsId(licensePlate) {
         let validationResult = Car.checkLicensePlate(licensePlate);
+        console.log(licensePlate);
+        console.log(util.isIntegerOrIntegerString(parseInt(licensePlate)));
         if (validationResult instanceof NoConstraintViolation) {
-            if (!licensePlate) {
+            if (!licensePlate || !util.isNonEmptyString(licensePlate)) {
                 validationResult = new MandatoryValueConstraintViolation(
                     "A value for the license plate must be provided!"
                 );
@@ -41,6 +43,8 @@ class Car {
                     validationResult = new UniquenessConstraintViolation(
                         "There is already a car with this license plate!"
                     );
+                } else if (!util.isIntegerOrIntegerString(parseInt(licensePlate))) {
+                    validationResult = new PatternConstraintViolation("An ID should alway be in digit form");
                 } else {
                     validationResult = new NoConstraintViolation();
                 }

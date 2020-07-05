@@ -20,11 +20,13 @@ car_rental.v.cars.createCar = {
         const formEl = document.forms["Cars-C"];
         // set an event handler for the submit/save button
 
-        formEl.licensePlate.addEventListener("input", function() {
-            const validationResult = Car.checkLicensePlate(formEl.licensePlate.value);
+        formEl.licensePlate.addEventListener("input", async function() {
+            const validationResult = await Car.checkLicensePlateAsId(
+                formEl.licensePlate.value
+            );
             formEl.licensePlate.setCustomValidity(validationResult.message);
         });
-        formEl.manufacturer.addEventListener("input", function() {
+        formEl.manufacturer.addEventListener("input", async function() {
             const validationResult = Car.checkManufacturer(formEl.manufacturer.value);
             formEl.manufacturer.setCustomValidity(validationResult.message);
         });
@@ -86,6 +88,25 @@ car_rental.v.cars.updateCar = {
                 formEl.reset();
             }
         });
+
+        formEl.licensePlate.addEventListener("input", async function() {
+            const validationResult = await Car.checkLicensePlateAsId(
+                formEl.licensePlate.value
+            );
+            formEl.licensePlate.setCustomValidity(validationResult.message);
+        });
+        formEl.manufacturer.addEventListener("input", async function() {
+            const validationResult = Car.checkManufacturer(formEl.manufacturer.value);
+            formEl.manufacturer.setCustomValidity(validationResult.message);
+        });
+        formEl.model.addEventListener("input", function() {
+            const validationResult = Car.checkModel(formEl.model.value);
+            formEl.model.setCustomValidity(validationResult.message);
+        });
+        formEl.damages.addEventListener("input", function() {
+            const validationResult = Car.checkDamages(formEl.damages.value);
+            formEl.damages.setCustomValidity(validationResult.message);
+        });
         // set an event handler for the submit/save button
         updateButton.addEventListener(
             "click",
@@ -106,10 +127,12 @@ car_rental.v.cars.updateCar = {
             model: formEl.model.value,
             damages: formEl.damages.value,
         };
-        await Car.update(slots);
-        // update the selection list option element
-        selectCarEl.options[selectCarEl.selectedIndex].text = slots.title;
-        formEl.reset();
+        if (formEl.checkValidity()) {
+            await Car.update(slots);
+            // update the selection list option element
+            selectCarEl.options[selectCarEl.selectedIndex].text = slots.title;
+            formEl.reset();
+        }
     },
 };
 car_rental.v.cars.deleteCar = {
