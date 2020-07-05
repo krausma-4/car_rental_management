@@ -1,8 +1,8 @@
 class RentalAgreement {
     constructor({ invoiceId, customer, car, startDate, endDate, price }) {
         (this._invoiceId = ""),
-        (this._customer = {}),
-        (this._car = {}),
+        (this._customer = ""),
+        (this._car = ""),
         (this._startDate = ""),
         (this._endDate = ""),
         (this._price = "");
@@ -91,7 +91,6 @@ RentalAgreement.add = async function(slots) {
 };
 
 RentalAgreement.update = async function(slots) {
-
     if (Object.keys(slots).length > 0) {
         await db.collection("rentalAgreements").doc(slots.invoiceId).update(slots);
         console.log(`Rent record ${slots.invoiceId} modified.`);
@@ -108,31 +107,45 @@ RentalAgreement.destroy = async function(rentID) {
 };
 
 RentalAgreement.generateTestData = function() {
-    let rentRecords = {};
-    rentRecords["112233"] = {
-        invoiceId: "112233",
-        customer: {
+    let car1 = {
+            licensePlate: "556677",
+            manufacturer: "Toyota",
+            model: "Corolla",
+        },
+        car2 = { licensePlate: "445566", manufacturer: "Tesla", model: "Model X" },
+        cust1 = {
             customersId: "12",
             name: "Emin",
             surname: "Bob",
             dateOfBirth: Date(12 - 05 - 1995),
             address: "Erich-Weinert-Strasse 6",
         },
-        car: { licensePlate: "556677", manufacturer: "Toyota", model: "Corolla" },
+        cust2 = {
+            customersId: "13",
+            name: "Martin",
+            surname: "Haris",
+            dateOfBirth: Date(12 - 05 - 1995),
+            address: "Erich-Weinert-Strasse 3",
+        };
+
+    Car.add(car1);
+    Car.add(car2);
+    Customer.add(cust1);
+    Customer.add(cust2);
+
+    let rentRecords = {};
+    rentRecords["112233"] = {
+        invoiceId: "112233",
+        customer: cust1.customersId,
+        car: car1.licensePlate,
         startDate: Date(12 - 05 - 1994),
         endDate: Date(12 - 05 - 1995),
         price: "179,98",
     };
     rentRecords["123467"] = {
         invoiceId: "123467",
-        customer: {
-            customersId: "12",
-            name: "Martin",
-            surname: "Haris",
-            dateOfBirth: Date(12 - 05 - 1995),
-            address: "Erich-Weinert-Strasse 6",
-        },
-        car: { licensePlate: "445566", manufacturer: "Tesla", model: "Model X" },
+        customer: cust2.customersId,
+        car: car2.licensePlate,
         startDate: Date(12 - 05 - 1995),
         endDate: Date(20 - 05 - 1995),
         price: "289",

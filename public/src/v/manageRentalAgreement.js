@@ -3,15 +3,42 @@ car_rental.v.rentalAgreements.listAllRentAgreements = {
         const tableBodyEl = document.querySelector("table#rents>tbody");
 
         var rentRecords = await RentalAgreement.retrieveAll();
+        var allCustomers = await Customer.retrieveAll();
+        var allCars = await Car.retrieveAll();
 
         for (let rentRec of rentRecords) {
             let row = tableBodyEl.insertRow();
-            row.insertCell(-1).textContent = rentRec.invoiceId;
-            row.insertCell(-1).textContent = rentRec.customer.name;
-            row.insertCell(-1).textContent = rentRec.car.model;
-            row.insertCell(-1).textContent = rentRec.startDate;
-            row.insertCell(-1).textContent = rentRec.endDate;
-            row.insertCell(-1).textContent = rentRec.price;
+            let cust,
+                rentedCar = "";
+            try {
+                cust = (await Customer.retrieve(rentRec.customer)).customersId;
+            } catch (error) {}
+            try {
+                rentedCar = (await Car.retrieve(rentRec.car)).licensePlate;
+            } catch (error) {}
+
+            if (cust === "" || rentedCar === "") {
+                console.log(rentRec.invoiceId);
+                await RentalAgreement.destroy(rentRec.invoiceId);
+            } else {
+                row.insertCell(-1).textContent = rentRec.invoiceId;
+                row.insertCell(-1).textContent = (await Customer.retrieve(cust)).name;
+                row.insertCell(-1).textContent = (await Car.retrieve(rentedCar)).model;
+                row.insertCell(-1).textContent = rentRec.startDate;
+                row.insertCell(-1).textContent = rentRec.endDate;
+                row.insertCell(-1).textContent = rentRec.price;
+
+                // save data
+                const slots = {
+                    invoiceId: rentRec.invoiceId,
+                    customer: cust,
+                    car: rentedCar,
+                    startDate: rentRec.startDate,
+                    endDate: rentRec.endDate,
+                    price: rentRec.price,
+                };
+                await RentalAgreement.update(slots);
+            }
         }
     },
 };
@@ -51,10 +78,12 @@ car_rental.v.rentalAgreements.createRentAgreement = {
 
         selectCarEl.addEventListener("change", function() {
             for (let carRec of allCars) {
-                if (carRec.licensePlate === selectCustEl.value) {
+                if (carRec.licensePlate === selectCarEl.value) {
                     car = carRec;
                 }
+
             }
+
         });
 
         // set an event handler for the submit/save button
@@ -62,8 +91,8 @@ car_rental.v.rentalAgreements.createRentAgreement = {
             //await db.collection("cars").doc(selectCarEl.value).get().data()
             const slots = {
                 invoiceId: formEl.invoiceId.value,
-                customer: customer,
-                car: {},
+                customer: customer.customersId,
+                car: car.licensePlate,
                 startDate: formEl.start.value,
                 endDate: formEl.end.value,
                 price: formEl.price.value,
@@ -99,7 +128,15 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         let customer = custRecord,
             car = carRecord;
 
+        console.log(customer);
+        console.log(car);
+
         for (let custRec of allCustomers) {
+            console.log(customer);
+            console.log(custRec.customersId);
+            if (custRec.customersId === customer) {
+                customer = custRec.customersId;
+            }
             let optionEl = document.createElement("option");
             optionEl.text = custRec.name;
             optionEl.value = custRec.customersId;
@@ -107,6 +144,11 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         }
 
         for (let carRec of allCars) {
+            console.log(car);
+            console.log(carRec.licensePlate);
+            if (carRec.licensePlate === car) {
+                car = carRec.licensePlate;
+            }
             let optionEl = document.createElement("option");
             optionEl.text = carRec.model;
             optionEl.value = carRec.licensePlate;
@@ -116,7 +158,7 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         selectCustEl.addEventListener("change", function() {
             for (let custRec of allCustomers) {
                 if (custRec.customersId === selectCustEl.value) {
-                    customer = custRec;
+                    customer = custRec.customersId;
                 }
             }
         });
@@ -124,7 +166,7 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         selectCarEl.addEventListener("change", function() {
             for (let carRec of allCars) {
                 if (carRec.licensePlate === selectCustEl.value) {
-                    car = carRec;
+                    car = carRec.licensePlate;
                 }
             }
         });
@@ -147,7 +189,14 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         });
         // set an event handler for the submit/save button
         updateButton.addEventListener("click", async function() {
-            console.log(formEl.invoiceId.value);
+            console.log(selectCustEl.value);
+            console.log(selectCarEl.value);
+            if (selectCustEl.value === "---") {
+                console.log(customer);
+            }
+            if (selectCarEl.value === "---") {
+                console.log(car);
+            }
             // save data
             const slots = {
                 invoiceId: formEl.invoiceId.value,
@@ -189,7 +238,8 @@ car_rental.v.rentalAgreements.deleteRentAgreement = {
         // Set an event handler for the submit/delete button
         deleteButton.addEventListener(
             "click",
-            car_rental.v.rentalAgreements.deleteRentAgreement.handleDeleteButtonClickEvent
+            car_rental.v.rentalAgreements.deleteRentAgreement
+            .handleDeleteButtonClickEvent
         );
     },
     // Event handler for deleting a book

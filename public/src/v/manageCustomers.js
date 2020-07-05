@@ -102,7 +102,10 @@ car_rental.v.customers.deleteCustomer = {
         const formEl = document.forms["Cust-D"],
             deleteButton = formEl.commit,
             selectCustEl = formEl.selectCustomer;
+        var allCustomers = await Customer.retrieveAll();
         // load all car records
+
+        console.log(allCustomers);
 
         const custRecords = await Customer.retrieveAll();
         for (let custRec of custRecords) {
@@ -122,6 +125,7 @@ car_rental.v.customers.deleteCustomer = {
     handleDeleteButtonClickEvent: async function() {
         const selectCustEl = document.forms["Cust-D"].selectCustomer;
         const customerID = selectCustEl.value;
+        console.log(customerID);
         if (customerID) {
             await Customer.destroy(customerID);
             // remove deleted book from select options
