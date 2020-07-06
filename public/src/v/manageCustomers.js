@@ -27,11 +27,15 @@ car_rental.v.customers.createCustomer = {
     // save user input data
     handleSaveButtonClickEvent: async function() {
         const formEl = document.forms["Cust-C"];
+        let year = (formEl.birthdate.value).slice(0, 4),
+            month = (formEl.birthdate.value).slice(5, 7),
+            day = (formEl.birthdate.value).slice(8, 10);
+
         const slots = {
             customersId: formEl.customersId.value,
             name: formEl.name.value,
             surname: formEl.surname.value,
-            dateOfBirth: formEl.birthdate.value,
+            dateOfBirth: (new Date(year, parseInt(month) - 1, parseInt(day) + 1)).toISOString().slice(0, 10),
             address: formEl.address.value,
         };
         alert("I am creatting now");
@@ -83,16 +87,19 @@ car_rental.v.customers.updateCustomer = {
     handleSaveButtonClickEvent: async function() {
         const formEl = document.forms["Cust-U"],
             selectCustEl = formEl.selectCustomer;
+        let year = (formEl.birthdate.value).slice(0, 4),
+            month = (formEl.birthdate.value).slice(5, 7),
+            day = (formEl.birthdate.value).slice(8, 10);
         const slots = {
             customersId: formEl.customersId.value,
             name: formEl.name.value,
             surname: formEl.surname.value,
-            dateOfBirth: formEl.birthdate.value,
+            dateOfBirth: (new Date(year, parseInt(month) - 1, parseInt(day) + 1)).toISOString().slice(0, 10),
             address: formEl.address.value,
         };
         await Customer.update(slots);
         // update the selection list option element
-        selectCustEl.options[selectCustEl.selectedIndex].text = slots.title;
+        selectCustEl.options[selectCustEl.selectedIndex].text = slots.customersId;
         formEl.reset();
     },
 };

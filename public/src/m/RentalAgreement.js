@@ -117,14 +117,14 @@ RentalAgreement.generateTestData = function() {
             customersId: "12",
             name: "Emin",
             surname: "Bob",
-            dateOfBirth: Date(12 - 05 - 1995),
+            dateOfBirth: (new Date(1995, 05, 12)).toISOString().slice(0, 10),
             address: "Erich-Weinert-Strasse 6",
         },
         cust2 = {
             customersId: "13",
             name: "Martin",
             surname: "Haris",
-            dateOfBirth: Date(12 - 05 - 1995),
+            dateOfBirth: (new Date(1990, 10, 01)).toISOString().slice(0, 10),
             address: "Erich-Weinert-Strasse 3",
         };
 
@@ -138,16 +138,16 @@ RentalAgreement.generateTestData = function() {
         invoiceId: "112233",
         customer: cust1.customersId,
         car: car1.licensePlate,
-        startDate: Date(12 - 05 - 1994),
-        endDate: Date(12 - 05 - 1995),
+        startDate: (new Date(2020, 05, 12)).toISOString().slice(0, 10),
+        endDate: (new Date(2020, 05, 20)).toISOString().slice(0, 10),
         price: "179,98",
     };
     rentRecords["123467"] = {
         invoiceId: "123467",
         customer: cust2.customersId,
         car: car2.licensePlate,
-        startDate: Date(12 - 05 - 1995),
-        endDate: Date(20 - 05 - 1995),
+        startDate: (new Date(2020, 02, 12)).toISOString().slice(0, 10),
+        endDate: (new Date(2020, 03, 12)).toISOString().slice(0, 10),
         price: "289",
     };
 
@@ -167,6 +167,22 @@ RentalAgreement.clearData = function() {
                 // Delete book docs iteratively
                 allRents.forEach(function(rentDocs) {
                     db.collection("rentalAgreements").doc(rentDocs.id).delete();
+                });
+            });
+        db.collection("customers")
+            .get()
+            .then(function(allCustomers) {
+                // Delete book docs iteratively
+                allCustomers.forEach(function(custDocs) {
+                    db.collection("customers").doc(custDocs.id).delete();
+                });
+            });
+        db.collection("cars")
+            .get()
+            .then(function(allCars) {
+                // Delete book docs iteratively
+                allCars.forEach(function(carDocs) {
+                    db.collection("cars").doc(carDocs.id).delete();
                 });
             });
     }
