@@ -21,7 +21,7 @@ class Car {
             if (licensePlate === undefined) return new NoConstraintViolation();
             else if (typeof licensePlate !== "string" || licensePlate.trim() === "") {
                 return new RangeConstraintViolation(
-                    "The ISBN must be a non-empty string!"
+                    "The ID must be a non-empty string!"
                 );
             } else {
                 return new NoConstraintViolation();
@@ -30,8 +30,7 @@ class Car {
         // Mandatory value and uniqueness constraints
     static async checkLicensePlateAsId(licensePlate) {
         let validationResult = Car.checkLicensePlate(licensePlate);
-        console.log(licensePlate);
-        console.log(util.isIntegerOrIntegerString(parseInt(licensePlate)));
+
         if (validationResult instanceof NoConstraintViolation) {
             if (!licensePlate || !util.isNonEmptyString(licensePlate)) {
                 validationResult = new MandatoryValueConstraintViolation(

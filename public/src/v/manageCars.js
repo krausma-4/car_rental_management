@@ -47,6 +47,21 @@ car_rental.v.cars.createCar = {
     // save user input data
     handleSaveButtonClickEvent: async function() {
         const formEl = document.forms["Cars-C"];
+
+        formEl.licensePlate.setCustomValidity(
+            (await Car.checkLicensePlateAsId(formEl.licensePlate.value)).message
+        );
+
+        formEl.manufacturer.setCustomValidity(
+            Car.checkManufacturer(formEl.manufacturer.value).message
+        );
+
+        formEl.model.setCustomValidity(Car.checkModel(formEl.model.value).message);
+
+        formEl.damages.setCustomValidity(
+            Car.checkDamages(formEl.damages.value).message
+        );
+
         const slots = {
             licensePlate: formEl.licensePlate.value,
             manufacturer: formEl.manufacturer.value,
@@ -89,12 +104,7 @@ car_rental.v.cars.updateCar = {
             }
         });
 
-        formEl.licensePlate.addEventListener("input", async function() {
-            const validationResult = await Car.checkLicensePlateAsId(
-                formEl.licensePlate.value
-            );
-            formEl.licensePlate.setCustomValidity(validationResult.message);
-        });
+
         formEl.manufacturer.addEventListener("input", async function() {
             const validationResult = Car.checkManufacturer(formEl.manufacturer.value);
             formEl.manufacturer.setCustomValidity(validationResult.message);
@@ -121,6 +131,19 @@ car_rental.v.cars.updateCar = {
     handleSaveButtonClickEvent: async function() {
         const formEl = document.forms["Car-U"],
             selectCarEl = formEl.selectCar;
+
+
+
+        formEl.manufacturer.setCustomValidity(
+            Car.checkManufacturer(formEl.manufacturer.value).message
+        );
+
+        formEl.model.setCustomValidity(Car.checkModel(formEl.model.value).message);
+
+        formEl.damages.setCustomValidity(
+            Car.checkDamages(formEl.damages.value).message
+        );
+
         const slots = {
             licensePlate: formEl.licensePlate.value,
             manufacturer: formEl.manufacturer.value,
@@ -130,7 +153,7 @@ car_rental.v.cars.updateCar = {
         if (formEl.checkValidity()) {
             await Car.update(slots);
             // update the selection list option element
-            selectCarEl.options[selectCarEl.selectedIndex].text = slots.title;
+            selectCarEl.options[selectCarEl.selectedIndex].text = slots.licensePlate;
             formEl.reset();
         }
     },

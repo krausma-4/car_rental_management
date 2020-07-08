@@ -18,6 +18,30 @@ car_rental.v.customers.listAllCustomers = {
 car_rental.v.customers.createCustomer = {
     setupUserInterface: async function() {
         const saveButton = document.forms["Cust-C"].commit;
+        const formEl = document.forms["Cust-C"];
+        formEl.customersId.addEventListener("input", async function() {
+            const validationResult = await Customer.checkcustomersIdAsId(
+                formEl.customersId.value
+            );
+            formEl.customersId.setCustomValidity(validationResult.message);
+        });
+        formEl.name.addEventListener("input", async function() {
+            const validationResult = Customer.checkName(formEl.name.value);
+            formEl.name.setCustomValidity(validationResult.message);
+        });
+        formEl.surname.addEventListener("input", function() {
+            const validationResult = Customer.checkName(formEl.surname.value);
+            formEl.surname.setCustomValidity(validationResult.message);
+        });
+        formEl.birthdate.addEventListener("input", function() {
+            const validationResult = Customer.checkBirthday(formEl.birthdate.value);
+            formEl.birthdate.setCustomValidity(validationResult.message);
+        });
+        formEl.address.addEventListener("input", function() {
+            const validationResult = Customer.checkAddress(formEl.address.value);
+            formEl.address.setCustomValidity(validationResult.message);
+        });
+
         // set an event handler for the submit/save button
         saveButton.addEventListener(
             "click",
@@ -27,20 +51,45 @@ car_rental.v.customers.createCustomer = {
     // save user input data
     handleSaveButtonClickEvent: async function() {
         const formEl = document.forms["Cust-C"];
-        let year = (formEl.birthdate.value).slice(0, 4),
-            month = (formEl.birthdate.value).slice(5, 7),
-            day = (formEl.birthdate.value).slice(8, 10);
+        let year = formEl.birthdate.value.slice(0, 4),
+            month = formEl.birthdate.value.slice(5, 7),
+            day = formEl.birthdate.value.slice(8, 10);
+
+
+        formEl.customersId.setCustomValidity(
+            (await Customer.checkcustomersIdAsId(formEl.customersId.value)).message
+        );
+
+        formEl.name.setCustomValidity(
+            Customer.checkName(formEl.name.value).message
+        );
+
+        formEl.surname.setCustomValidity(
+            Customer.checkName(formEl.surname.value).message
+        );
+
+        formEl.birthdate.setCustomValidity(
+            Customer.checkBirthday(formEl.birthdate.value).message
+        );
+
+        formEl.address.setCustomValidity(
+            Customer.checkAddress(formEl.address.value).message
+        );
 
         const slots = {
             customersId: formEl.customersId.value,
             name: formEl.name.value,
             surname: formEl.surname.value,
-            dateOfBirth: (new Date(year, parseInt(month) - 1, parseInt(day) + 1)).toISOString().slice(0, 10),
+            dateOfBirth: new Date(year, parseInt(month) - 1, parseInt(day) + 1)
+                .toISOString()
+                .slice(0, 10),
             address: formEl.address.value,
         };
-        alert("I am creatting now");
-        await Customer.add(slots);
-        formEl.reset();
+
+        if (formEl.checkValidity()) {
+            await Customer.add(slots);
+            formEl.reset();
+        }
     },
 };
 
@@ -63,7 +112,7 @@ car_rental.v.customers.updateCustomer = {
             if (custId) {
                 // retrieve up-to-date car record
                 const custRec = await Customer.retrieve(custId);
-                console.log(formEl);
+
                 formEl.customersId.value = custRec.customersId;
                 formEl.name.value = custRec.name;
                 formEl.surname.value = custRec.surname;
@@ -73,6 +122,25 @@ car_rental.v.customers.updateCustomer = {
                 formEl.reset();
             }
         });
+
+
+        formEl.name.addEventListener("input", async function() {
+            const validationResult = Customer.checkName(formEl.name.value);
+            formEl.name.setCustomValidity(validationResult.message);
+        });
+        formEl.surname.addEventListener("input", function() {
+            const validationResult = Customer.checkName(formEl.surname.value);
+            formEl.surname.setCustomValidity(validationResult.message);
+        });
+        formEl.birthdate.addEventListener("input", function() {
+            const validationResult = Customer.checkBirthday(formEl.birthdate.value);
+            formEl.birthdate.setCustomValidity(validationResult.message);
+        });
+        formEl.address.addEventListener("input", function() {
+            const validationResult = Customer.checkAddress(formEl.address.value);
+            formEl.address.setCustomValidity(validationResult.message);
+        });
+
         // set an event handler for the submit/save button
         updateButton.addEventListener(
             "click",
@@ -87,20 +155,42 @@ car_rental.v.customers.updateCustomer = {
     handleSaveButtonClickEvent: async function() {
         const formEl = document.forms["Cust-U"],
             selectCustEl = formEl.selectCustomer;
-        let year = (formEl.birthdate.value).slice(0, 4),
-            month = (formEl.birthdate.value).slice(5, 7),
-            day = (formEl.birthdate.value).slice(8, 10);
+        let year = formEl.birthdate.value.slice(0, 4),
+            month = formEl.birthdate.value.slice(5, 7),
+            day = formEl.birthdate.value.slice(8, 10);
+
+
+
+        formEl.name.setCustomValidity(
+            Customer.checkName(formEl.name.value).message
+        );
+
+        formEl.surname.setCustomValidity(
+            Customer.checkName(formEl.surname.value).message
+        );
+
+        formEl.birthdate.setCustomValidity(
+            Customer.checkBirthday(formEl.birthdate.value).message
+        );
+
+        formEl.address.setCustomValidity(
+            Customer.checkAddress(formEl.address.value).message
+        );
         const slots = {
             customersId: formEl.customersId.value,
             name: formEl.name.value,
             surname: formEl.surname.value,
-            dateOfBirth: (new Date(year, parseInt(month) - 1, parseInt(day) + 1)).toISOString().slice(0, 10),
+            dateOfBirth: new Date(year, parseInt(month) - 1, parseInt(day) + 1)
+                .toISOString()
+                .slice(0, 10),
             address: formEl.address.value,
         };
-        await Customer.update(slots);
-        // update the selection list option element
-        selectCustEl.options[selectCustEl.selectedIndex].text = slots.customersId;
-        formEl.reset();
+        if (formEl.checkValidity()) {
+            await Customer.update(slots);
+            // update the selection list option element
+            selectCustEl.options[selectCustEl.selectedIndex].text = slots.customersId;
+            formEl.reset();
+        }
     },
 };
 

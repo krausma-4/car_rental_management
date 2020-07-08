@@ -17,16 +17,72 @@ class Customer {
         return this._customersId;
     }
 
+    static checkCustomersId(id) {
+        if (id === undefined) return new NoConstraintViolation();
+        else if (typeof id !== "string" || id.trim() === "") {
+            return new RangeConstraintViolation("The ID must be a non-empty string!");
+        } else {
+            return new NoConstraintViolation();
+        }
+    }
+
+    static async checkcustomersIdAsId(customersId) {
+        let validationResult = Customer.checkCustomersId(customersId);
+
+        if (validationResult instanceof NoConstraintViolation) {
+            if (!customersId || !util.isNonEmptyString(customersId)) {
+                validationResult = new MandatoryValueConstraintViolation(
+                    "A value for the customer's ID must be provided!"
+                );
+            } else {
+                let customer = await db.collection("customers").doc(customersId).get();
+                if (customer.exists) {
+                    validationResult = new UniquenessConstraintViolation(
+                        "There is already a customer with this ID!"
+                    );
+                } else if (!util.isIntegerOrIntegerString(parseInt(customersId))) {
+                    validationResult = new PatternConstraintViolation(
+                        "An ID should alway be in digit form"
+                    );
+                } else {
+                    validationResult = new NoConstraintViolation();
+                }
+            }
+        }
+        return validationResult;
+    }
+
     set customersId(id) {
-        this._customersId = id;
+        const validationResult = Customer.checkCustomersId(id);
+        if (validationResult instanceof NoConstraintViolation) {
+            this._customersId = id;
+        } else {
+            throw validationResult;
+        }
     }
 
     get custName() {
         return this._name;
     }
 
+    static checkName(name) {
+        if (name === undefined) {
+            return new MandatoryValueConstraintViolation("A name must be provided!");
+        } else if (!util.isNonEmptyString(name)) {
+            return new RangeConstraintViolation(
+                "The name must be a non-empty string!"
+            );
+        } else {
+            return new NoConstraintViolation();
+        }
+    }
     set custName(n) {
-        this._name = n;
+        const validationResult = Customer.checkName(n);
+        if (validationResult instanceof NoConstraintViolation) {
+            this._name = n;
+        } else {
+            throw validationResult;
+        }
     }
 
     get custSurname() {
@@ -34,23 +90,64 @@ class Customer {
     }
 
     set custSurname(sn) {
-        this._surname = sn;
+        const validationResult = Customer.checkName(sn);
+        if (validationResult instanceof NoConstraintViolation) {
+            this._surname = sn;
+        } else {
+            throw validationResult;
+        }
     }
 
     get dateOfBirth() {
         return this._dateOfBirth;
     }
 
+    static checkBirthday(date) {
+        if (date === undefined) {
+            return new MandatoryValueConstraintViolation("A date must be provided!");
+        } else if (!util.isNonEmptyString(date)) {
+            return new RangeConstraintViolation(
+                "The date must be a non-empty string!"
+            );
+        } else {
+            return new NoConstraintViolation();
+        }
+    }
+
     set dateOfBirth(date) {
-        this._dateOfBirth = date;
+        const validationResult = Customer.checkName(date);
+        if (validationResult instanceof NoConstraintViolation) {
+            this._dateOfBirth = date;
+        } else {
+            throw validationResult;
+        }
     }
 
     get address() {
         return this._address;
     }
 
+    static checkAddress(a) {
+        if (a === undefined) {
+            return new MandatoryValueConstraintViolation(
+                "An address must be provided!"
+            );
+        } else if (!util.isNonEmptyString(a)) {
+            return new RangeConstraintViolation(
+                "The address must be a non-empty string!"
+            );
+        } else {
+            return new NoConstraintViolation();
+        }
+    }
+
     set address(a) {
-        this._address = a;
+        const validationResult = Customer.checkAddress(a);
+        if (validationResult instanceof NoConstraintViolation) {
+            this._address = a;
+        } else {
+            throw validationResult;
+        }
     }
 }
 

@@ -81,26 +81,28 @@ car_rental.v.rentalAgreements.createRentAgreement = {
                 if (carRec.licensePlate === selectCarEl.value) {
                     car = carRec;
                 }
-
             }
-
         });
 
         // set an event handler for the submit/save button
         saveButton.addEventListener("click", async function() {
             //await db.collection("cars").doc(selectCarEl.value).get().data()
-            let year1 = (formEl.start.value).slice(0, 4),
-                month1 = (formEl.start.value).slice(5, 7),
-                day1 = (formEl.start.value).slice(8, 10),
-                year2 = (formEl.end.value).slice(0, 4),
-                month2 = (formEl.end.value).slice(5, 7),
-                day2 = (formEl.end.value).slice(8, 10);
+            let year1 = formEl.start.value.slice(0, 4),
+                month1 = formEl.start.value.slice(5, 7),
+                day1 = formEl.start.value.slice(8, 10),
+                year2 = formEl.end.value.slice(0, 4),
+                month2 = formEl.end.value.slice(5, 7),
+                day2 = formEl.end.value.slice(8, 10);
             const slots = {
                 invoiceId: formEl.invoiceId.value,
                 customer: customer.customersId,
                 car: car.licensePlate,
-                startDate: (new Date(year1, parseInt(month1) - 1, parseInt(day1) + 1)).toISOString().slice(0, 10),
-                endDate: (new Date(year2, parseInt(month2) - 1, parseInt(day2) + 1)).toISOString().slice(0, 10),
+                startDate: new Date(year1, parseInt(month1) - 1, parseInt(day1) + 1)
+                    .toISOString()
+                    .slice(0, 10),
+                endDate: new Date(year2, parseInt(month2) - 1, parseInt(day2) + 1)
+                    .toISOString()
+                    .slice(0, 10),
                 price: formEl.price.value,
             };
 
@@ -128,18 +130,13 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
             optionEl.value = rentRec.invoiceId;
             selectRentEl.add(optionEl, null);
         }
-        const rentRecord = await RentalAgreement.retrieve(selectRentEl.value),
-            custRecord = rentRecord.customer,
-            carRecord = rentRecord.car;
-        let customer = custRecord,
-            car = carRecord;
-
-        console.log(customer);
-        console.log(car);
+        const rentRecord = await RentalAgreement.retrieve(selectRentEl.value);
+        let custRecord = await Customer.retrieve(rentRecord.customer),
+            carRecord = await Car.retrieve(rentRecord.car),
+            customer = custRecord.customersId,
+            car = carRecord.licensePlate;
 
         for (let custRec of allCustomers) {
-            console.log(customer);
-            console.log(custRec.customersId);
             if (custRec.customersId === customer) {
                 customer = custRec.customersId;
             }
@@ -150,8 +147,6 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         }
 
         for (let carRec of allCars) {
-            console.log(car);
-            console.log(carRec.licensePlate);
             if (carRec.licensePlate === car) {
                 car = carRec.licensePlate;
             }
@@ -174,6 +169,7 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
                 if (carRec.licensePlate === selectCustEl.value) {
                     car = carRec.licensePlate;
                 }
+
             }
         });
 
@@ -182,10 +178,16 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
             const invoiceID = selectRentEl.value;
             if (invoiceID) {
                 // retrieve up-to-date car record
-                const rentRec = await RentalAgreement.retrieve(invoiceID),
-                    custRec = rentRec.customer;
+                const rentRec = await RentalAgreement.retrieve(invoiceID);
+                (custRecord = await Customer.retrieve(rentRec.customer)),
+                (carRecord = await Car.retrieve(rentRec.car)),
+                (customer = custRecord.customersId),
+                (car = carRecord.licensePlate);
 
+                console.log(selectCustEl.options[0].text);
                 formEl.invoiceId.value = rentRec.invoiceId;
+                selectCustEl.options[0].text = custRecord.name;
+                selectCarEl.options[0].text = carRecord.model;
                 formEl.start.value = rentRec.startDate;
                 formEl.end.value = rentRec.endDate;
                 formEl.price.value = rentRec.price;
@@ -195,27 +197,26 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         });
         // set an event handler for the submit/save button
         updateButton.addEventListener("click", async function() {
-            console.log(selectCustEl.value);
-            console.log(selectCarEl.value);
-            if (selectCustEl.value === "---") {
-                console.log(customer);
-            }
-            if (selectCarEl.value === "---") {
-                console.log(car);
-            }
-            let year1 = (formEl.start.value).slice(0, 4),
-                month1 = (formEl.start.value).slice(5, 7),
-                day1 = (formEl.start.value).slice(8, 10),
-                year2 = (formEl.end.value).slice(0, 4),
-                month2 = (formEl.end.value).slice(5, 7),
-                day2 = (formEl.end.value).slice(8, 10);
+            console.log(customer);
+            console.log(car);
+
+            let year1 = formEl.start.value.slice(0, 4),
+                month1 = formEl.start.value.slice(5, 7),
+                day1 = formEl.start.value.slice(8, 10),
+                year2 = formEl.end.value.slice(0, 4),
+                month2 = formEl.end.value.slice(5, 7),
+                day2 = formEl.end.value.slice(8, 10);
             // save data
             const slots = {
                 invoiceId: formEl.invoiceId.value,
                 customer: customer,
                 car: car,
-                startDate: (new Date(year1, parseInt(month1) - 1, parseInt(day1) + 1)).toISOString().slice(0, 10),
-                endDate: (new Date(year2, parseInt(month2) - 1, parseInt(day2) + 1)).toISOString().slice(0, 10),
+                startDate: new Date(year1, parseInt(month1) - 1, parseInt(day1) + 1)
+                    .toISOString()
+                    .slice(0, 10),
+                endDate: new Date(year2, parseInt(month2) - 1, parseInt(day2) + 1)
+                    .toISOString()
+                    .slice(0, 10),
                 price: formEl.price.value,
             };
             await RentalAgreement.update(slots);
