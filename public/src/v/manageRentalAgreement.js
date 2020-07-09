@@ -21,9 +21,12 @@ car_rental.v.rentalAgreements.listAllRentAgreements = {
                 console.log(rentRec.invoiceId);
                 await RentalAgreement.destroy(rentRec.invoiceId);
             } else {
+                (cust = await Customer.retrieve(cust)),
+                (rentedCar = await Car.retrieve(rentedCar));
                 row.insertCell(-1).textContent = rentRec.invoiceId;
-                row.insertCell(-1).textContent = (await Customer.retrieve(cust)).name;
-                row.insertCell(-1).textContent = (await Car.retrieve(rentedCar)).model;
+                row.insertCell(-1).textContent = cust.name + " " + cust.surname;
+                row.insertCell(-1).textContent =
+                    rentedCar.manufacturer + " " + rentedCar.model;
                 row.insertCell(-1).textContent = rentRec.startDate;
                 row.insertCell(-1).textContent = rentRec.endDate;
                 row.insertCell(-1).textContent = rentRec.price;
@@ -31,13 +34,20 @@ car_rental.v.rentalAgreements.listAllRentAgreements = {
                 // save data
                 const slots = {
                     invoiceId: rentRec.invoiceId,
-                    customer: cust,
-                    car: rentedCar,
+                    customer: cust.customersId,
+                    car: rentedCar.licensePlate,
                     startDate: rentRec.startDate,
                     endDate: rentRec.endDate,
                     price: rentRec.price,
                 };
+                const invoiceSlots = {
+                    invoice_id: rentRec.invoiceId,
+                    customer: cust.customersId,
+                    car: rentedCar.licensePlate,
+                };
+
                 await RentalAgreement.update(slots);
+                await Invoice.update(invoiceSlots);
             }
         }
     },
@@ -105,8 +115,14 @@ car_rental.v.rentalAgreements.createRentAgreement = {
                     .slice(0, 10),
                 price: formEl.price.value,
             };
+            const invoiceSlots = {
+                invoice_id: formEl.invoiceId.value,
+                customer: customer.customersId,
+                car: car.licensePlate,
+            };
 
             await RentalAgreement.add(slots);
+            await Invoice.add(invoiceSlots);
             formEl.reset();
         });
     },
@@ -169,7 +185,6 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
                 if (carRec.licensePlate === selectCustEl.value) {
                     car = carRec.licensePlate;
                 }
-
             }
         });
 
@@ -219,7 +234,16 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
                     .slice(0, 10),
                 price: formEl.price.value,
             };
+
+            const invoiceSlots = {
+                invoice_id: formEl.invoiceId.value,
+                customer: customer,
+                car: car,
+            };
+
             await RentalAgreement.update(slots);
+            await Invoice.update(invoiceSlots);
+
             // update the selection list option element
 
             selectRentEl.options[selectRentEl.selectedIndex].text = slots.invoiceId;
