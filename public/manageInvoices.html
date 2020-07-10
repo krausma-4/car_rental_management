@@ -38,9 +38,10 @@
             <nav>
                 <ul>
                     <li><a href="index.html">Startseite</a></li>
+                    <li><a href="manageCars.html">Cars</a></li>
                     <li><a href="manageCustomers.html">Customers</a></li>
                     <li><a href="manageRentalAgreement.html">Rental Agreements</a></li>
-                    <li><a href="manageInvoices.html">Invoices</a></li>
+
                 </ul>
             </nav>
         </div>
@@ -105,10 +106,14 @@
                             <label>Invoice's ID: <input type="text" name="invoiceId" /></label>
                         </div>
                         <div class="field">
-                            <label>Customer: <input type="text" name="customer" /></label>
+                            <label>Customer:
+                  <select type="text" name="customer"><option>---</option></select
+                ></label>
                         </div>
                         <div class="field">
-                            <label>Car: <input type="text" name="car" /></label>
+                            <label>Car:
+                  <select type="text" name="car"><option>---</option></select
+                ></label>
                         </div>
 
                         <div class="button-group" style="width: 10em;">
@@ -127,18 +132,21 @@
                     <form>
                         <div class="select-one">
                             <label>Select invoice:
-                  <select name="selectInvoice"><option>---</option></select
+                  <select name="selectInvoice"><option >---</option></select
                 ></label>
                         </div>
                         <div>
                             <label>Invoice's ID: <output name="invoiceId" /></label>
                         </div>
-                        <div>
-                            <label>Customer: <input type="text" name="customer"
-                /></label>
+                        <div class="field">
+                            <label>Customer:
+                  <select type="text" name="customer"><option>---</option></select
+                ><text id="custOption" style="color: darkgreen;"></text> </label>
                         </div>
-                        <div>
-                            <label>Car: <input type="text" name="car" /></label>
+                        <div class="field">
+                            <label>Car:
+                  <select type="text" name="car"><option >---</option></select
+                ><text id="carOption" style="color: darkgreen;"></text> </label>
                         </div>
 
                         <div class="button-group" style="width: 10em;">

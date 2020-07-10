@@ -9,26 +9,232 @@ car_rental.v.invoice.listAllInvoices = {
                 cust = await Customer.retrieve(invoiceRec.customer),
                 rentedCar = await Car.retrieve(invoiceRec.car);
             row.insertCell(-1).textContent = invoiceRec.invoice_id;
-            row.insertCell(-1).textContent = (cust.name + " " + cust.surname);
-            row.insertCell(-1).textContent = (rentedCar.manufacturer + " " + rentedCar.model);
+            row.insertCell(-1).textContent = cust.name + " " + cust.surname;
+            row.insertCell(-1).textContent =
+                rentedCar.manufacturer + " " + rentedCar.model;
         }
     },
 };
 
 car_rental.v.invoice.createInvoice = {
     setupUserInterface: async function() {
+        const formEl = document.forms["Invoice-C"],
+            saveButton = document.forms["Invoice-C"].commit,
+            selectCustEl = formEl.customer,
+            selectCarEl = formEl.car;
 
+        var allCustomers = await Customer.retrieveAll();
+        var allCars = await Car.retrieveAll();
+        let customer, car;
+
+        for (let custRec of allCustomers) {
+            let optionEl = document.createElement("option");
+            optionEl.text = custRec.name;
+            optionEl.value = custRec.customersId;
+            selectCustEl.add(optionEl, null);
+        }
+
+        for (let carRec of allCars) {
+            let optionEl = document.createElement("option");
+            optionEl.text = carRec.model;
+            optionEl.value = carRec.licensePlate;
+            selectCarEl.add(optionEl, null);
+        }
+
+        selectCustEl.addEventListener("change", function() {
+            for (let custRec of allCustomers) {
+                if (custRec.customersId === selectCustEl.value) {
+                    customer = custRec;
+                }
+            }
+        });
+
+        selectCarEl.addEventListener("change", function() {
+            for (let carRec of allCars) {
+                if (carRec.licensePlate === selectCarEl.value) {
+                    car = carRec;
+                }
+            }
+        });
+
+        // set an event handler for the submit/save button
+        saveButton.addEventListener("click", async function() {
+            //await db.collection("cars").doc(selectCarEl.value).get().data()
+
+            const slots = {
+                invoiceId: formEl.invoiceId.value,
+                customer: customer.customersId,
+                car: car.licensePlate,
+                startDate: new Date().toISOString().slice(0, 10),
+                endDate: new Date().toISOString().slice(0, 10),
+                price: "",
+            };
+            const invoiceSlots = {
+                invoice_id: formEl.invoiceId.value,
+                customer: customer.customersId,
+                car: car.licensePlate,
+            };
+
+            await Invoice.add(invoiceSlots);
+            await RentalAgreement.add(slots);
+
+            formEl.reset();
+        });
     },
 };
 
 car_rental.v.invoice.updateInvoice = {
     setupUserInterface: async function() {
+        const formEl = document.forms["Invoice-U"],
+            updateButton = formEl.commit,
+            selectInvoiceEl = formEl.selectInvoice,
+            selectCustEl = formEl.customer,
+            selectCarEl = formEl.car;
+        var allCustomers = await Customer.retrieveAll();
+        var allCars = await Car.retrieveAll();
+        let car,
+            customer = "";
+        // load all car records
+        const rentRecords = await Invoice.retrieveAll();
+        for (let rentRec of rentRecords) {
+            let optionEl = document.createElement("option");
+            optionEl.text = rentRec.invoice_id;
+            optionEl.value = rentRec.invoice_id;
+            selectInvoiceEl.add(optionEl, null);
+        }
 
+        for (let custRec of allCustomers) {
+            let optionEl = document.createElement("option");
+            optionEl.text = custRec.name;
+            optionEl.value = custRec.customersId;
+            selectCustEl.add(optionEl, null);
+        }
+
+        for (let carRec of allCars) {
+            let optionEl = document.createElement("option");
+            optionEl.text = carRec.model;
+            optionEl.value = carRec.licensePlate;
+            selectCarEl.add(optionEl, null);
+        }
+
+        selectCustEl.addEventListener("change", function() {
+            for (let custRec of allCustomers) {
+                if (custRec.customersId === selectCustEl.value) {
+                    customer = custRec.customersId;
+                }
+            }
+        });
+
+        selectCarEl.addEventListener("change", function() {
+            console.log()
+            for (let carRec of allCars) {
+                if (carRec.licensePlate === selectCarEl.value) {
+                    car = carRec.licensePlate;
+                }
+            }
+        });
+
+        // when a car is selected, fill the form with its data
+        selectInvoiceEl.addEventListener("change", async function() {
+            const rentRecord = await Invoice.retrieve(selectInvoiceEl.value);
+
+            let custRecord = await Customer.retrieve(rentRecord.customer),
+                carRecord = await Car.retrieve(rentRecord.car);
+            customer = custRecord.customersId;
+            car = carRecord.licensePlate;
+
+
+            const invoiceID = selectInvoiceEl.value;
+            console.log(invoiceID);
+            if (invoiceID) {
+                // retrieve up-to-date car record
+                const rentRec = await Invoice.retrieve(invoiceID);
+                (custRecord = await Customer.retrieve(rentRec.customer)),
+                (carRecord = await Car.retrieve(rentRec.car)),
+                (customer = custRecord.customersId),
+                (car = carRecord.licensePlate);
+
+                formEl.invoiceId.value = rentRec.invoice_id;
+                (document.getElementById("custOption")).textContent = custRecord.name;
+                (document.getElementById("carOption")).textContent = carRecord.model;
+
+                //formEl.carOption.value = carRecord.model;
+                //selectCustEl.remove(document.getElementById("custOption1"));
+                //selectCustEl.value = custRecord.name;
+                //selectCarEl.remove(document.getElementById("carOption1"));
+                //selectCarEl.value = carRecord.model;
+            } else {
+                formEl.reset();
+            }
+        });
+        // set an event handler for the submit/save button
+        updateButton.addEventListener("click", async function() {
+            console.log(customer);
+            console.log(car);
+
+            // save data
+            const slots = {
+                invoiceId: formEl.invoiceId.value,
+                customer: customer,
+                car: car,
+                startDate: new Date().toISOString().slice(0, 10),
+                endDate: new Date().toISOString().slice(0, 10),
+                price: "",
+            };
+
+            const invoiceSlots = {
+                invoice_id: formEl.invoiceId.value,
+                customer: customer,
+                car: car,
+            };
+
+            await RentalAgreement.update(slots);
+            await Invoice.update(invoiceSlots);
+
+            // update the selection list option element
+
+            selectInvoiceEl.options[selectInvoiceEl.selectedIndex].text =
+                slots.invoiceId;
+            console.log(selectInvoiceEl.options[selectInvoiceEl.selectedIndex].text);
+            formEl.reset();
+        });
+        // neutralize the submit event
+        formEl.addEventListener("submit", function(e) {
+            e.preventDefault();
+        });
     },
 };
 
 car_rental.v.invoice.deleteInvoice = {
     setupUserInterface: async function() {
+        const formEl = document.forms["Invoice-D"],
+            deleteButton = formEl.commit,
+            selectInvoiceEl = formEl.selectInvoice;
+        // load all car records
 
+        const rentRecords = await Invoice.retrieveAll();
+        for (let rentRec of rentRecords) {
+            let optionEl = document.createElement("option");
+            optionEl.text = rentRec.invoice_id;
+            optionEl.value = rentRec.invoice_id;
+            selectInvoiceEl.add(optionEl, null);
+        }
+
+        // Set an event handler for the submit/delete button
+        deleteButton.addEventListener(
+            "click",
+            car_rental.v.invoice.deleteInvoice.handleDeleteButtonClickEvent
+        );
+    },
+    // Event handler for deleting a book
+    handleDeleteButtonClickEvent: async function() {
+        const selectInvoiceEl = document.forms["Invoice-D"].selectInvoice;
+        const invoiceID = selectInvoiceEl.value;
+        if (invoiceID) {
+            await Invoice.destroy(invoiceID);
+            await RentalAgreement.destroy(invoiceID);
+            // remove deleted book from select options
+            selectInvoiceEl.remove(selectInvoiceEl.selectedIndex);
+        }
     },
 };

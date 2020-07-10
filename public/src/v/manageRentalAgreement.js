@@ -137,7 +137,8 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
             selectCarEl = formEl.car;
         var allCustomers = await Customer.retrieveAll();
         var allCars = await Car.retrieveAll();
-
+        let car,
+            customer = "";
         // load all car records
         const rentRecords = await RentalAgreement.retrieveAll();
         for (let rentRec of rentRecords) {
@@ -146,16 +147,8 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
             optionEl.value = rentRec.invoiceId;
             selectRentEl.add(optionEl, null);
         }
-        const rentRecord = await RentalAgreement.retrieve(selectRentEl.value);
-        let custRecord = await Customer.retrieve(rentRecord.customer),
-            carRecord = await Car.retrieve(rentRecord.car),
-            customer = custRecord.customersId,
-            car = carRecord.licensePlate;
 
         for (let custRec of allCustomers) {
-            if (custRec.customersId === customer) {
-                customer = custRec.customersId;
-            }
             let optionEl = document.createElement("option");
             optionEl.text = custRec.name;
             optionEl.value = custRec.customersId;
@@ -163,9 +156,6 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
         }
 
         for (let carRec of allCars) {
-            if (carRec.licensePlate === car) {
-                car = carRec.licensePlate;
-            }
             let optionEl = document.createElement("option");
             optionEl.text = carRec.model;
             optionEl.value = carRec.licensePlate;
@@ -182,7 +172,7 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
 
         selectCarEl.addEventListener("change", function() {
             for (let carRec of allCars) {
-                if (carRec.licensePlate === selectCustEl.value) {
+                if (carRec.licensePlate === selectCarEl.value) {
                     car = carRec.licensePlate;
                 }
             }
@@ -190,6 +180,12 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
 
         // when a car is selected, fill the form with its data
         selectRentEl.addEventListener("change", async function() {
+            const rentRecord = await RentalAgreement.retrieve(selectRentEl.value);
+            let custRecord = await Customer.retrieve(rentRecord.customer),
+                carRecord = await Car.retrieve(rentRecord.car);
+            customer = custRecord.customersId;
+            car = carRecord.licensePlate;
+
             const invoiceID = selectRentEl.value;
             if (invoiceID) {
                 // retrieve up-to-date car record
@@ -199,10 +195,11 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
                 (customer = custRecord.customersId),
                 (car = carRecord.licensePlate);
 
-                console.log(selectCustEl.options[0].text);
+
                 formEl.invoiceId.value = rentRec.invoiceId;
-                selectCustEl.options[0].text = custRecord.name;
-                selectCarEl.options[0].text = carRecord.model;
+                (document.getElementById("custOption")).textContent = custRecord.name;
+                (document.getElementById("carOption")).textContent = carRecord.model;
+
                 formEl.start.value = rentRec.startDate;
                 formEl.end.value = rentRec.endDate;
                 formEl.price.value = rentRec.price;
@@ -285,6 +282,7 @@ car_rental.v.rentalAgreements.deleteRentAgreement = {
         const invoiceID = selectRentEl.value;
         if (invoiceID) {
             await RentalAgreement.destroy(invoiceID);
+            await Invoice.destroy(invoiceID);
             // remove deleted book from select options
             selectRentEl.remove(selectRentEl.selectedIndex);
         }
