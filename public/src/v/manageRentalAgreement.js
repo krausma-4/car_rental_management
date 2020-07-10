@@ -3,26 +3,26 @@ car_rental.v.rentalAgreements.listAllRentAgreements = {
         const tableBodyEl = document.querySelector("table#rents>tbody");
 
         var rentRecords = await RentalAgreement.retrieveAll();
-        var allCustomers = await Customer.retrieveAll();
-        var allCars = await Car.retrieveAll();
 
         for (let rentRec of rentRecords) {
             let row = tableBodyEl.insertRow();
             let cust,
                 rentedCar = "";
             try {
-                cust = (await Customer.retrieve(rentRec.customer)).customersId;
+                cust = (await Customer.retrieve(rentRec.customer));
             } catch (error) {}
             try {
-                rentedCar = (await Car.retrieve(rentRec.car)).licensePlate;
+                rentedCar = (await Car.retrieve(rentRec.car));
             } catch (error) {}
 
-            if (cust === "" || rentedCar === "") {
+            console.log(cust);
+            console.log(rentedCar);
+            if (cust === undefined || rentedCar === undefined) {
                 console.log(rentRec.invoiceId);
                 await RentalAgreement.destroy(rentRec.invoiceId);
+                await Invoice.destroy(rentRec.invoiceId);
             } else {
-                (cust = await Customer.retrieve(cust)),
-                (rentedCar = await Car.retrieve(rentedCar));
+
                 row.insertCell(-1).textContent = rentRec.invoiceId;
                 row.insertCell(-1).textContent = cust.name + " " + cust.surname;
                 row.insertCell(-1).textContent =
@@ -31,23 +31,7 @@ car_rental.v.rentalAgreements.listAllRentAgreements = {
                 row.insertCell(-1).textContent = rentRec.endDate;
                 row.insertCell(-1).textContent = rentRec.price;
 
-                // save data
-                const slots = {
-                    invoiceId: rentRec.invoiceId,
-                    customer: cust.customersId,
-                    car: rentedCar.licensePlate,
-                    startDate: rentRec.startDate,
-                    endDate: rentRec.endDate,
-                    price: rentRec.price,
-                };
-                const invoiceSlots = {
-                    invoice_id: rentRec.invoiceId,
-                    customer: cust.customersId,
-                    car: rentedCar.licensePlate,
-                };
 
-                await RentalAgreement.update(slots);
-                await Invoice.update(invoiceSlots);
             }
         }
     },
@@ -94,9 +78,62 @@ car_rental.v.rentalAgreements.createRentAgreement = {
             }
         });
 
+        formEl.invoiceId.addEventListener("input", async function() {
+            const validationResult = await RentalAgreement.checkInvoiceIdAsId(
+                formEl.invoiceId.value
+            );
+            formEl.invoiceId.setCustomValidity(validationResult.message);
+        });
+        formEl.customer.addEventListener("change", function() {
+            const validationResult = RentalAgreement.checkCustomer(
+                customer.customersId
+            );
+            formEl.customer.setCustomValidity(validationResult.message);
+        });
+        formEl.car.addEventListener("change", function() {
+            const validationResult = RentalAgreement.checkCar(car.licensePlate);
+            formEl.car.setCustomValidity(validationResult.message);
+        });
+        formEl.start.addEventListener("input", function() {
+            const validationResult = RentalAgreement.checkDate(formEl.start.value);
+            formEl.start.setCustomValidity(validationResult.message);
+        });
+        formEl.end.addEventListener("input", function() {
+            const validationResult = RentalAgreement.checkDate(formEl.end.value);
+            formEl.end.setCustomValidity(validationResult.message);
+        });
+        formEl.price.addEventListener("input", function() {
+            const validationResult = RentalAgreement.checkPrice(formEl.price.value);
+            formEl.price.setCustomValidity(validationResult.message);
+        });
+
         // set an event handler for the submit/save button
         saveButton.addEventListener("click", async function() {
-            //await db.collection("cars").doc(selectCarEl.value).get().data()
+            formEl.invoiceId.setCustomValidity(
+                (await RentalAgreement.checkInvoiceIdAsId(formEl.invoiceId.value))
+                .message
+            );
+
+            formEl.customer.setCustomValidity(
+                RentalAgreement.checkCustomer(customer.customersId).message
+            );
+
+            formEl.car.setCustomValidity(
+                RentalAgreement.checkCar(car.licensePlate).message
+            );
+
+            formEl.start.setCustomValidity(
+                RentalAgreement.checkDate(formEl.start.value).message
+            );
+
+            formEl.end.setCustomValidity(
+                RentalAgreement.checkDate(formEl.end.value).message
+            );
+
+            formEl.price.setCustomValidity(
+                RentalAgreement.checkPrice(formEl.price.value).message
+            );
+
             let year1 = formEl.start.value.slice(0, 4),
                 month1 = formEl.start.value.slice(5, 7),
                 day1 = formEl.start.value.slice(8, 10),
@@ -120,10 +157,11 @@ car_rental.v.rentalAgreements.createRentAgreement = {
                 customer: customer.customersId,
                 car: car.licensePlate,
             };
-
-            await RentalAgreement.add(slots);
-            await Invoice.add(invoiceSlots);
-            formEl.reset();
+            if (formEl.checkvalidity()) {
+                await RentalAgreement.add(slots);
+                await Invoice.add(invoiceSlots);
+                formEl.reset();
+            }
         });
     },
 };
@@ -195,10 +233,9 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
                 (customer = custRecord.customersId),
                 (car = carRecord.licensePlate);
 
-
                 formEl.invoiceId.value = rentRec.invoiceId;
-                (document.getElementById("custOption")).textContent = custRecord.name;
-                (document.getElementById("carOption")).textContent = carRecord.model;
+                document.getElementById("custOption").textContent = custRecord.name;
+                document.getElementById("carOption").textContent = carRecord.model;
 
                 formEl.start.value = rentRec.startDate;
                 formEl.end.value = rentRec.endDate;
@@ -207,10 +244,49 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
                 formEl.reset();
             }
         });
+
+        formEl.customer.addEventListener("change", function() {
+            const validationResult = RentalAgreement.checkCustomer(customer);
+            formEl.customer.setCustomValidity(validationResult.message);
+        });
+        formEl.car.addEventListener("change", function() {
+            const validationResult = RentalAgreement.checkCar(car);
+            formEl.car.setCustomValidity(validationResult.message);
+        });
+        formEl.start.addEventListener("input", function() {
+            const validationResult = RentalAgreement.checkDate(formEl.start.value);
+            formEl.start.setCustomValidity(validationResult.message);
+        });
+        formEl.end.addEventListener("input", function() {
+            const validationResult = RentalAgreement.checkDate(formEl.end.value);
+            formEl.end.setCustomValidity(validationResult.message);
+        });
+        formEl.price.addEventListener("input", function() {
+            const validationResult = RentalAgreement.checkPrice(formEl.price.value);
+            formEl.price.setCustomValidity(validationResult.message);
+        });
+
         // set an event handler for the submit/save button
         updateButton.addEventListener("click", async function() {
             console.log(customer);
             console.log(car);
+            formEl.customer.setCustomValidity(
+                RentalAgreement.checkCustomer(customer).message
+            );
+
+            formEl.car.setCustomValidity(RentalAgreement.checkCar(car).message);
+
+            formEl.start.setCustomValidity(
+                RentalAgreement.checkDate(formEl.start.value).message
+            );
+
+            formEl.end.setCustomValidity(
+                RentalAgreement.checkDate(formEl.end.value).message
+            );
+
+            formEl.price.setCustomValidity(
+                RentalAgreement.checkPrice(formEl.price.value).message
+            );
 
             let year1 = formEl.start.value.slice(0, 4),
                 month1 = formEl.start.value.slice(5, 7),
@@ -238,9 +314,10 @@ car_rental.v.rentalAgreements.updateRentAgreement = {
                 car: car,
             };
 
-            await RentalAgreement.update(slots);
-            await Invoice.update(invoiceSlots);
-
+            if (formEl.checkValidity()) {
+                await RentalAgreement.update(slots);
+                await Invoice.update(invoiceSlots);
+            }
             // update the selection list option element
 
             selectRentEl.options[selectRentEl.selectedIndex].text = slots.invoiceId;

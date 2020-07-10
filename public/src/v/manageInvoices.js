@@ -6,12 +6,26 @@ car_rental.v.invoice.listAllInvoices = {
 
         for (let invoiceRec of invoiceRecords) {
             let row = tableBodyEl.insertRow(),
-                cust = await Customer.retrieve(invoiceRec.customer),
+                cust,
+                rentedCar = "";
+            try {
+                cust = await Customer.retrieve(invoiceRec.customer);
+            } catch (error) {}
+            try {
                 rentedCar = await Car.retrieve(invoiceRec.car);
-            row.insertCell(-1).textContent = invoiceRec.invoice_id;
-            row.insertCell(-1).textContent = cust.name + " " + cust.surname;
-            row.insertCell(-1).textContent =
-                rentedCar.manufacturer + " " + rentedCar.model;
+            } catch (error) {}
+
+            if (cust === undefined || rentedCar === undefined) {
+                console.log(invoiceRec.invoice_id);
+                await Invoice.destroy(invoiceRec.invoice_id);
+                await RentalAgreement.destroy(invoiceRec.invoice_id);
+            } else {
+
+                row.insertCell(-1).textContent = invoiceRec.invoice_id;
+                row.insertCell(-1).textContent = cust.name + " " + cust.surname;
+                row.insertCell(-1).textContent =
+                    rentedCar.manufacturer + " " + rentedCar.model;
+            }
         }
     },
 };
@@ -126,7 +140,7 @@ car_rental.v.invoice.updateInvoice = {
         });
 
         selectCarEl.addEventListener("change", function() {
-            console.log()
+            console.log();
             for (let carRec of allCars) {
                 if (carRec.licensePlate === selectCarEl.value) {
                     car = carRec.licensePlate;
@@ -143,7 +157,6 @@ car_rental.v.invoice.updateInvoice = {
             customer = custRecord.customersId;
             car = carRecord.licensePlate;
 
-
             const invoiceID = selectInvoiceEl.value;
             console.log(invoiceID);
             if (invoiceID) {
@@ -155,14 +168,8 @@ car_rental.v.invoice.updateInvoice = {
                 (car = carRecord.licensePlate);
 
                 formEl.invoiceId.value = rentRec.invoice_id;
-                (document.getElementById("custOption")).textContent = custRecord.name;
-                (document.getElementById("carOption")).textContent = carRecord.model;
-
-                //formEl.carOption.value = carRecord.model;
-                //selectCustEl.remove(document.getElementById("custOption1"));
-                //selectCustEl.value = custRecord.name;
-                //selectCarEl.remove(document.getElementById("carOption1"));
-                //selectCarEl.value = carRecord.model;
+                document.getElementById("custOption").textContent = custRecord.name;
+                document.getElementById("carOption").textContent = carRecord.model;
             } else {
                 formEl.reset();
             }

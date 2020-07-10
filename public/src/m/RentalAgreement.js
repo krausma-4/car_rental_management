@@ -157,7 +157,7 @@ class RentalAgreement {
     }
 
     static checkPrice(p) {
-        console.log(parseInt(p));
+
         if (p === undefined) {
             return new MandatoryValueConstraintViolation("A price must be provided!");
         } else if (!util.isNonEmptyString(p)) {
@@ -165,7 +165,7 @@ class RentalAgreement {
                 "The price must be a non-empty string!"
             );
         } else if (!util.isIntegerOrIntegerString(parseInt(p))) {
-            validationResult = new PatternConstraintViolation(
+            return new PatternConstraintViolation(
                 "An ID should alway be in digit form"
             );
         } else {

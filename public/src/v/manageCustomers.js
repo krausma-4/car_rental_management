@@ -124,7 +124,7 @@ car_rental.v.customers.updateCustomer = {
         });
 
 
-        formEl.name.addEventListener("input", async function() {
+        formEl.name.addEventListener("input", function() {
             const validationResult = Customer.checkName(formEl.name.value);
             formEl.name.setCustomValidity(validationResult.message);
         });
