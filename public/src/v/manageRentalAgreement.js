@@ -15,8 +15,7 @@ car_rental.v.rentalAgreements.listAllRentAgreements = {
                 rentedCar = (await Car.retrieve(rentRec.car));
             } catch (error) {}
 
-            console.log(cust);
-            console.log(rentedCar);
+
             if (cust === undefined || rentedCar === undefined) {
                 console.log(rentRec.invoiceId);
                 await RentalAgreement.destroy(rentRec.invoiceId);
@@ -157,7 +156,7 @@ car_rental.v.rentalAgreements.createRentAgreement = {
                 customer: customer.customersId,
                 car: car.licensePlate,
             };
-            if (formEl.checkvalidity()) {
+            if (formEl.checkValidity()) {
                 await RentalAgreement.add(slots);
                 await Invoice.add(invoiceSlots);
                 formEl.reset();

@@ -20,7 +20,6 @@ car_rental.v.invoice.listAllInvoices = {
                 await Invoice.destroy(invoiceRec.invoice_id);
                 await RentalAgreement.destroy(invoiceRec.invoice_id);
             } else {
-
                 row.insertCell(-1).textContent = invoiceRec.invoice_id;
                 row.insertCell(-1).textContent = cust.name + " " + cust.surname;
                 row.insertCell(-1).textContent =
@@ -58,7 +57,7 @@ car_rental.v.invoice.createInvoice = {
         selectCustEl.addEventListener("change", function() {
             for (let custRec of allCustomers) {
                 if (custRec.customersId === selectCustEl.value) {
-                    customer = custRec;
+                    customer = custRec.customersId;
                 }
             }
         });
@@ -66,33 +65,65 @@ car_rental.v.invoice.createInvoice = {
         selectCarEl.addEventListener("change", function() {
             for (let carRec of allCars) {
                 if (carRec.licensePlate === selectCarEl.value) {
-                    car = carRec;
+                    car = carRec.licensePlate;
                 }
             }
         });
 
+        formEl.invoiceId.addEventListener("input", async function() {
+            const validationResult = await Invoice.checkInvoiceIdAsId(
+                formEl.invoiceId.value
+            );
+            formEl.invoiceId.setCustomValidity(validationResult.message);
+        });
+        formEl.customer.addEventListener("change", function() {
+            console.log(customer);
+            const validationResult = Invoice.checkCustomer(customer);
+            formEl.customer.setCustomValidity(validationResult.message);
+        });
+        formEl.car.addEventListener("change", function() {
+            const validationResult = Invoice.checkCar(car);
+            formEl.car.setCustomValidity(validationResult.message);
+        });
+
+        console.log(customer);
         // set an event handler for the submit/save button
         saveButton.addEventListener("click", async function() {
             //await db.collection("cars").doc(selectCarEl.value).get().data()
 
+            console.log(formEl.invoiceId.value);
+
+            formEl.invoiceId.setCustomValidity(
+                (await Invoice.checkInvoiceIdAsId(formEl.invoiceId.value)).message
+            );
+            console.log(Invoice.checkCustomer(customer));
+
+            formEl.customer.setCustomValidity(
+                Invoice.checkCustomer(customer).message
+            );
+
+            formEl.car.setCustomValidity(Invoice.checkCar(car).message);
+
             const slots = {
                 invoiceId: formEl.invoiceId.value,
-                customer: customer.customersId,
-                car: car.licensePlate,
+                customer: customer,
+                car: car,
                 startDate: new Date().toISOString().slice(0, 10),
                 endDate: new Date().toISOString().slice(0, 10),
                 price: "",
             };
             const invoiceSlots = {
                 invoice_id: formEl.invoiceId.value,
-                customer: customer.customersId,
-                car: car.licensePlate,
+                customer: customer,
+                car: car,
             };
 
-            await Invoice.add(invoiceSlots);
-            await RentalAgreement.add(slots);
 
-            formEl.reset();
+            if (formEl.checkValidity()) {
+                await Invoice.add(invoiceSlots);
+                await RentalAgreement.add(slots);
+                formEl.reset();
+            }
         });
     },
 };
@@ -140,7 +171,6 @@ car_rental.v.invoice.updateInvoice = {
         });
 
         selectCarEl.addEventListener("change", function() {
-            console.log();
             for (let carRec of allCars) {
                 if (carRec.licensePlate === selectCarEl.value) {
                     car = carRec.licensePlate;
@@ -158,7 +188,7 @@ car_rental.v.invoice.updateInvoice = {
             car = carRecord.licensePlate;
 
             const invoiceID = selectInvoiceEl.value;
-            console.log(invoiceID);
+
             if (invoiceID) {
                 // retrieve up-to-date car record
                 const rentRec = await Invoice.retrieve(invoiceID);
@@ -174,11 +204,22 @@ car_rental.v.invoice.updateInvoice = {
                 formEl.reset();
             }
         });
+
+        formEl.customer.addEventListener("change", function() {
+            const validationResult = Invoice.checkCustomer(customer.customersId);
+            formEl.customer.setCustomValidity(validationResult.message);
+        });
+        formEl.car.addEventListener("change", function() {
+            const validationResult = Invoice.checkCar(car.licensePlate);
+            formEl.car.setCustomValidity(validationResult.message);
+        });
         // set an event handler for the submit/save button
         updateButton.addEventListener("click", async function() {
-            console.log(customer);
-            console.log(car);
+            formEl.customer.setCustomValidity(
+                Invoice.checkCustomer(customer.customersId).message
+            );
 
+            formEl.car.setCustomValidity(Invoice.checkCar(car.licensePlate).message);
             // save data
             const slots = {
                 invoiceId: formEl.invoiceId.value,
@@ -195,15 +236,19 @@ car_rental.v.invoice.updateInvoice = {
                 car: car,
             };
 
-            await RentalAgreement.update(slots);
-            await Invoice.update(invoiceSlots);
+            if (formEl.checkValidity()) {
+                await RentalAgreement.update(slots);
+                await Invoice.update(invoiceSlots);
 
-            // update the selection list option element
+                // update the selection list option element
 
-            selectInvoiceEl.options[selectInvoiceEl.selectedIndex].text =
-                slots.invoiceId;
-            console.log(selectInvoiceEl.options[selectInvoiceEl.selectedIndex].text);
-            formEl.reset();
+                selectInvoiceEl.options[selectInvoiceEl.selectedIndex].text =
+                    slots.invoiceId;
+                console.log(
+                    selectInvoiceEl.options[selectInvoiceEl.selectedIndex].text
+                );
+                formEl.reset();
+            }
         });
         // neutralize the submit event
         formEl.addEventListener("submit", function(e) {

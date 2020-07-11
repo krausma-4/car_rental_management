@@ -57,6 +57,8 @@ class Invoice {
     }
 
     static checkCustomer(c) {
+        console.log(c);
+
         if (c === undefined) {
             return new MandatoryValueConstraintViolation(
                 "A customer must be provided!"
@@ -85,6 +87,7 @@ class Invoice {
     }
 
     static checkCar(c) {
+        console.log(c);
         if (c === undefined) {
             return new MandatoryValueConstraintViolation("A car must be provided!");
         } else if (!util.isNonEmptyString(c)) {
