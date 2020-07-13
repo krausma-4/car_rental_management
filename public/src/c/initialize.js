@@ -4,6 +4,8 @@ const car_rental = {
     c: { cars: {}, customers: {}, invoice: {}, rentalAgreements: {} },
 };
 const db = firebase.firestore();
+// initialize Firebase user authentication interface
+const auth = firebase.auth();
 
 function showChosenSection(idOfElem, idofchosenSection, functionTOBeLoaded) {
     var chosenSection = document.getElementById(idOfElem);

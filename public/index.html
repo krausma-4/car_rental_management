@@ -12,6 +12,7 @@
     <script src="/__/firebase/7.14.5/firebase-firestore.js"></script>
     <!-- Initialize Firebase -->
     <script src="/__/firebase/init.js"></script>
+    <script src="/__/firebase/7.15.3/firebase-auth.js"></script>
 
     <link rel="stylesheet" href="css/normalize.min.css" />
     <link rel="stylesheet" href="css/main.css" />
@@ -49,19 +50,54 @@
         <div class="wrapper clearfix">
             <p>For your car rental agency it is now possible to manage the following data sets online:</p>
             <div class="two-col-menu">
-                <ul class="menu">
-                    <li><button type="button" onclick="location.href='manageCars.html';">Car data</button></li>
-                    <li><button tape="button" onclick="location.href='manageCustomers.html';">Customer data</button></li>
-                    <li><button tape="button" onclick="location.href='manageRentalAgreement.html';">Rental Agreements</button></li>
-                    <li><button tape="button" onclick="location.href='manageInvoices.html';">Invoices</button></li>
+                <!--<ul role="menubar">
+                    <li id="opt-create" role="menuitem" style="opacity: 0.4;">
+                        <span>Create</span>
+                        <a href="createBook.html" style="display: none">Create</a>
+                        <i> a new book record</i>
+                    </li>
+                    <li role="menuitem">
+                        <a href="retrieveAndListAllBooks.html">Retrieve</a>
+                        <i> and list all book records</i>
+                    </li>
+                    <li id="opt-update" role="menuitem" style="opacity: 0.4;">
+                        <span>Update </span>
+                        <a href="updateBook.html" style="display: none">Update</a>
+                        <i>a book record</i>
+                    </li>
+                    <li id="opt-delete" role="menuitem" style="opacity: 0.4;">
+                        <span>Delete </span>
+                        <a href="deleteBook.html" style="display: none">Delete</a>
+                        <i> a book record</i>
+                    </li>
+                    <li id="tool-clear" role="menuitem" style="margin-top:1em; opacity: 0.4;">
+                        <button onclick="Book.clearData()" type="button" disabled="disabled">Clear
+    </button>
+                        <i> database</i>
+                    </li>
+                    <li id="tool-generate" role="menuitem" style="opacity: 0.4;">
+                        <button onclick="Book.generateTestData()" type="button" disabled="disabled">
+      Generate
+    </button>
+                        <i> test data</i>
+                    </li>
                 </ul>
-                <ul class="menu">
+                <p id="auth-invitation" style="display: none; border: dotted 1px black; padding: 1em; background: #feffea">Please
+                    <a href="authenticateUser.html">Log in or Sign up</a> to use the <b>disabled</b> change/write operations.</p>-->
+
+                <ul class="menu" role="menubar">
+                    <li><button type="button" onclick="location.href='manageCars.html';" role="menuitem" style=" opacity: 0.4;" disabled="disabled">Car data</button></li>
+                    <li><button tape="button" onclick="location.href='manageCustomers.html';" role="menuitem" style=" opacity: 0.4;" disabled="disabled">Customer data</button></li>
+                    <li><button tape="button" onclick="location.href='manageRentalAgreement.html';" role="menuitem" style=" opacity: 0.4;" disabled="disabled">Rental Agreements</button></li>
+                    <li><button tape="button" onclick="location.href='manageInvoices.html';" role="menuitem" style=" opacity: 0.4;" disabled="disabled">Invoices</button></li>
+                </ul>
+                <ul class="menu" role="menubar">
                     <li><button type="button" onclick="RentalAgreement.generateTestData()">Generate test data</button></li>
-                    <li><button type="button" onclick="RentalAgreement.clearData()">Clear database</button></li>
+                    <li><button type="button" onclick="RentalAgreement.clearData()" style=" opacity: 0.4;" disabled="disabled">Clear database</button></li>
                 </ul>
             </div>
-            <p>For playing with the app, you may first want to <button type="button" onclick="pl.c.app.generateTestData()">Create
-      test data</button> and then view it (e.g. by choosing "Movie data" and then "List all movies").</p>
+            <!---<p>For playing with the app, you may first want to <button type="button" onclick="pl.c.app.generateTestData()">Create
+      test data</button> and then view it (e.g. by choosing "Movie data" and then "List all movies").</p>-->
         </div>
     </main>
     <footer>
