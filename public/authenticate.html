@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Sing up or Log in</title>
+    <meta name="description" content="A plain JS app with subtyping and inheritance in class hierarchiess.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Firebase SDK snippet -->
+    <script src="/__/firebase/7.14.5/firebase-app.js"></script>
+    <script src="/__/firebase/7.14.5/firebase-firestore.js"></script>
+    <!-- Initialize Firebase -->
+    <script src="/__/firebase/init.js"></script>
+
+    <script src="/__/firebase/7.15.3/firebase-auth.js"></script>
+
+    <link rel="stylesheet" href="css/normalize.min.css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+    <script src="lib/browserShims.js"></script>
+    <script src="lib/util.js"></script>
+    <script src="lib/errorTypes.js"></script>
+    <script src="src/c/initialize.js"></script>
+    <script src="src/v/authenticateUser.js"></script>
+    <script>
+        window.addEventListener("load", car_rental.v.authenticateUser.setupLoginAndSignup);
+    </script>
+
+
+</head>
+
+<body>
+    <header>
+        <div class="wrapper clearfix">
+            <div class="title">
+                <h1>Log in or Sign up to continue</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Main Page</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="wrapper clearfix">
+            <h1>Log in / Sign up</h1>
+            <form id="User">
+                <div><label for="email">Email:</label><input type="text" id="email" name="email" /></div>
+                <div><label for="password">Password: <br><input   type="password" id="password" name="password"/></label></div>
+                <p>If you have no account click on Sign up else click on Log in</p>
+                <div>
+                    <button name="logIn" type="button">Log in</button>
+                    <button name="signUp" type="button">Sign up</button>
+                </div>
+
+
+            </form>
+        </div>
+    </main>
+    <footer>
+        <div class="foot-content wrapper">
+            This app was created following the tutorials of Prof.Dr. Gerd Wagner at
+            <a href="https://www.b-tu.de/fg-internet-technologie/">Chair of Internet Technology</a>, Brandenburg University of Technology, Germany.
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -15,6 +15,7 @@ car_rental.v.invoice.listAllInvoices = {
                 rentedCar = await Car.retrieve(invoiceRec.car);
             } catch (error) {}
 
+
             if (cust === undefined || rentedCar === undefined) {
                 console.log(invoiceRec.invoice_id);
                 await Invoice.destroy(invoiceRec.invoice_id);

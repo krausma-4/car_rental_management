@@ -151,11 +151,13 @@ car_rental.v.rentalAgreements.createRentAgreement = {
                     .slice(0, 10),
                 price: formEl.price.value,
             };
+
             const invoiceSlots = {
                 invoice_id: formEl.invoiceId.value,
                 customer: customer.customersId,
                 car: car.licensePlate,
             };
+            console.log(invoiceSlots);
             if (formEl.checkValidity()) {
                 await RentalAgreement.add(slots);
                 await Invoice.add(invoiceSlots);
