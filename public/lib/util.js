@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview  Defines utility procedures/functions
  * @author Gerd Wagner
@@ -359,5 +358,3 @@ var util = {
             {"displayProp": displayProp, "selection": selection});
     }
 };
-
-
