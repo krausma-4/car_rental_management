@@ -63,4 +63,4 @@ A customer has the usual master data like name, surname, date of birth, address.
 
 # Design Model
 
-![Design-Model](https://github.com/krausma-4/car_rental_management/blob/master/designModel%20(1).png)
+![Design-Model](https://github.com/krausma-4/car_rental_management/blob/master/Design-Model.png)
