@@ -228,6 +228,7 @@ RentalAgreement.destroy = async function(rentID) {
     }
 };
 
+
 RentalAgreement.generateTestData = function() {
     let car1 = {
             licensePlate: "556677",
@@ -235,6 +236,13 @@ RentalAgreement.generateTestData = function() {
             model: "Corolla",
         },
         car2 = { licensePlate: "445566", manufacturer: "Tesla", model: "Model X" },
+
+        car3 = { licensePlate: "112233", manufacturer: "Ford", model: "Fiesta" },
+        car4 = {
+            licensePlate: "223344",
+            manufacturer: "Trabant",
+            model: "601s",
+        },
         cust1 = {
             customersId: "12",
             name: "Emin",
@@ -248,12 +256,32 @@ RentalAgreement.generateTestData = function() {
             surname: "Haris",
             dateOfBirth: new Date(1990, 10, 01).toISOString().slice(0, 10),
             address: "Erich-Weinert-Strasse 3",
+        },
+        cust3 = {
+            customersId: "14",
+            name: "Peter",
+            surname: "Peterson",
+            dateOfBirth: new Date(1990, 09, 12).toISOString().slice(0, 10),
+            address: "Berliner Strasse 6",
+        },
+        cust4 = {
+            customersId: "15",
+            name: "Maximilian",
+            surname: "Stein",
+            dateOfBirth: new Date(1985, 10, 01).toISOString().slice(0, 10),
+            address: "Norden-Strasse 2",
         };
+
+
 
     Car.add(car1);
     Car.add(car2);
+    Car.add(car3);
+    Car.add(car4);
     Customer.add(cust1);
     Customer.add(cust2);
+    Customer.add(cust3);
+    Customer.add(cust4);
 
     let rentRecords = {};
     let invoiceRecords = {};
@@ -263,13 +291,12 @@ RentalAgreement.generateTestData = function() {
         car: car1.licensePlate,
         startDate: new Date(2020, 05, 12).toISOString().slice(0, 10),
         endDate: new Date(2020, 05, 20).toISOString().slice(0, 10),
-        price: "179,98",
+        price: "179,98 $",
     };
     invoiceRecords["112233"] = {
         invoice_id: "112233",
         customer: cust1.customersId,
         car: car1.licensePlate,
-
     };
     rentRecords["123467"] = {
         invoiceId: "123467",
@@ -277,15 +304,46 @@ RentalAgreement.generateTestData = function() {
         car: car2.licensePlate,
         startDate: new Date(2020, 02, 12).toISOString().slice(0, 10),
         endDate: new Date(2020, 03, 12).toISOString().slice(0, 10),
-        price: "289",
+        price: "289 $",
     };
 
     invoiceRecords["123467"] = {
         invoice_id: "123467",
         customer: cust2.customersId,
         car: car2.licensePlate,
-
     };
+
+    rentRecords["325325"] = {
+        invoiceId: "325325",
+        customer: cust3.customersId,
+        car: car3.licensePlate,
+        startDate: new Date(2020, 04, 12).toISOString().slice(0, 10),
+        endDate: new Date(2020, 04, 21).toISOString().slice(0, 10),
+        price: "435,26 $",
+    };
+
+    invoiceRecords["325325"] = {
+        invoice_id: "325325",
+        customer: cust3.customersId,
+        car: car3.licensePlate,
+    };
+
+    rentRecords["65632523"] = {
+        invoiceId: "65632523",
+        customer: cust4.customersId,
+        car: car4.licensePlate,
+        startDate: new Date(2019, 10, 12).toISOString().slice(0, 10),
+        endDate: new Date(2019, 10, 17).toISOString().slice(0, 10),
+        price: "135,26 $",
+    };
+
+    invoiceRecords["65632523"] = {
+        invoice_id: "65632523",
+        customer: cust4.customersId,
+        car: car4.licensePlate,
+    };
+
+
     // Save all test Book records to Firestore DB
     for (let id of Object.keys(rentRecords)) {
         let rentRecord = rentRecords[id];
@@ -321,6 +379,14 @@ RentalAgreement.clearData = function() {
                 // Delete book docs iteratively
                 allCars.forEach(function(carDocs) {
                     db.collection("cars").doc(carDocs.id).delete();
+                });
+            });
+        db.collection("invoice")
+            .get()
+            .then(function(allInvoices) {
+                // Delete book docs iteratively
+                allInvoices.forEach(function(invoiceDocs) {
+                    db.collection("invoice").doc(invoiceDocs.id).delete();
                 });
             });
     }
