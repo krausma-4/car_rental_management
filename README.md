@@ -63,4 +63,18 @@ A customer has the usual master data like name, surname, date of birth, address.
 
 # Design Model
 
-![Design-Model](https://github.com/krausma-4/car_rental_management/blob/master/Design-Model.png)
+![Design-Model](https://github.com/krausma-4/car_rental_management/blob/master/designModel%20(1).png)
+
+
+
+# Task management
+
+|tasks|provider|
+|:------------------------------:|:-------------------:|
+| creating firebase project |<li>Gabriel</li>  |
+| Structure of all folders and files | <li>Eleonora</li>|
+| validation Constraints |<li>Gabriel</li><li>Eleonora</li>  |
+| implementation of m- classes |<li>Gabriel</li><li>Eleonora</li>  |
+| implementation of v- classes |<li>Gabriel</li><li>Eleonora</li>  |
+| implementation of authentication part |<li>Eleonora</li>  |
+| bug fixes |<li>Gabriel</li><li>Eleonora</li>  |
