@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Handle your Rental Agreement</title>
+    <meta name="description" content="A plain JS app with subtyping and inheritance in class hierarchiess." />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Firebase SDK snippet -->
+    <script src="/__/firebase/7.14.5/firebase-app.js"></script>
+    <script src="/__/firebase/7.14.5/firebase-firestore.js"></script>
+    <!-- Initialize Firebase -->
+    <script src="/__/firebase/init.js"></script>
+    <script src="/__/firebase/7.15.3/firebase-auth.js"></script>
+
+    <link rel="stylesheet" href="css/normalize.min.css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+    <script src="lib/browserShims.js"></script>
+    <script src="lib/util.js"></script>
+    <script src="lib/errorTypes.js"></script>
+    <script src="lib/Enumeration.js"></script>
+    <script src="src/c/initialize.js"></script>
+    <script src="src/m/Car.js"></script>
+    <script src="src/m/Customer.js"></script>
+    <script src="src/m/RentalAgreement.js"></script>
+    <script src="src/m/Invoice.js"></script>
+    <script src="src/v/manageCars.js"></script>
+    <script src="src/v/manageCustomers.js"></script>
+    <script src="src/v/manageRentalAgreement.js"></script>
+    <script src="src/v/manageInvoices.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="wrapper clearfix">
+            <div class="title">
+                <h1>Car Rental</h1>
+                <h2>This is your new online app for managing your car rentals</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Main Page</a></li>
+                    <li><a href="manageCars.html">Cars</a></li>
+                    <li><a href="manageCustomers.html">Customers</a></li>
+                    <li><a href="manageInvoices.html">Invoices</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="wrapper clearfix">
+            <!-- ======================================================= -->
+            <section id="Rent-M" class="UI-Page">
+                <!-- ======================================================= -->
+                <h1>Manage rental Agreements</h1>
+                <ul class="menu">
+                    <li>
+                        <button type="button" onclick="showChosenSection('Rent-R','Rent-M',car_rental.v.rentalAgreements.listAllRentAgreements)">
+                List all rental Agreements
+              </button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Rent-C','Rent-M',car_rental.v.rentalAgreements.createRentAgreement)">
+                Add a new rental Agreement
+              </button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Rent-U','Rent-M', car_rental.v.rentalAgreements.updateRentAgreement)">
+                Update a rental Agreements
+              </button>
+                    </li>
+                    <li>
+                        <button type="button" onclick="showChosenSection('Rent-D','Rent-M', car_rental.v.rentalAgreements.deleteRentAgreement)">
+                Delete a rental Agreements
+              </button>
+                    </li>
+                </ul>
+                <div class="button"><a href="index.html">Back to Main menu</a></div>
+            </section>
+            <div id="chosenOption" style="display: none;">
+                <!-- ======================================================= -->
+                <section id="Rent-R" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>List all rental Agreements</h1>
+                    <table id="rents">
+                        <thead>
+                            <tr>
+                                <th>Invoice's ID</th>
+                                <th>Customer</th>
+                                <th>Car</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="button">
+                        <button type="button" onclick="refreshUI('manageRentalAgreement.html')">
+                Back to menu
+              </button>
+                    </div>
+                </section>
+                <!-- ======================================================= -->
+                <form id="Rent-C" name="Rent-C" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Add a new rental Agreement</h1>
+                    <form>
+                        <div class="field">
+                            <label>Invoce's ID: <input type="text" name="invoiceId"
+                /></label>
+                        </div>
+                        <div class="field">
+                            <label>Customer:
+                  <select type="text" name="customer"><option>---</option></select
+                ></label>
+                        </div>
+                        <div class="field">
+                            <label>Car:
+                  <select type="text" name="car"><option>---</option></select
+                ></label>
+                        </div>
+                        <div class="field">
+                            <label>Start Date: <input type="date" name="start" /></label>
+                        </div>
+                        <div class="field">
+                            <label>End Date: <input type="date" name="end" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Price: <input type="text" name="price" /></label>
+                        </div>
+
+                        <div class="button-group" style="width: 10em;">
+                            <button id="submitCreate" name="commit">Save</button>
+                            <button type="button" onclick="refreshUI('manageRentalAgreement.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
+
+                <!-- ======================================================= -->
+                <form id="Rent-U" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Update a rental Agreement</h1>
+                    <form>
+                        <div class="select-one">
+                            <label>Select rental Agreement:
+                  <select name="selectRent"><option >---</option></select
+                ></label>
+                        </div>
+                        <div>
+                            <label>Invoice's ID: <output name="invoiceId" /></label>
+                        </div>
+                        <div class="field">
+                            <label>Customer:
+                  <select type="text" name="customer"><option name="custOption">---</option></select
+                ><text id="custOption" style="color: darkgreen;"></text> </label>
+                        </div>
+                        <div class="field">
+                            <label>Car:
+                  <select type="text" name="car"><option name="carOption">---</option></select
+                ><text id="carOption" style="color: darkgreen;"></text> </label>
+                        </div>
+                        <div>
+                            <label>start Date: <input type="date" name="start" /></label>
+                        </div>
+                        <div>
+                            <label>End Date: <input type="date" name="end" /></label>
+                        </div>
+                        <div>
+                            <label>Price: <input type="text" name="price" /></label>
+                        </div>
+
+                        <div class="button-group" style="width: 10em;">
+                            <button type="submit" name="commit">Save</button>
+                            <button type="button" onclick="refreshUI('manageRentalAgreement.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
+
+                <!-- ======================================================= -->
+                <form id="Rent-D" class="UI-Page">
+                    <!-- ======================================================= -->
+                    <h1>Delete a rental Agreement</h1>
+                    <form>
+                        <div class="select-one">
+                            <label>Select rental Agreement:
+                  <select name="selectRent"><option>---</option></select
+                ></label>
+                        </div>
+                        <div class="button-group">
+                            <button type="submit" name="commit">Delete</button>
+                            <button type="button" onclick="refreshUI('manageRentalAgreement.html')">
+                  Back to menu
+                </button>
+                        </div>
+                    </form>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="foot-content wrapper">
+            This app was created following the tutorials of Prof.Dr. Gerd Wagner at
+            <a href="https://www.b-tu.de/fg-internet-technologie/">Chair of Internet Technology</a
+        >, Brandenburg University of Technology, Germany.
+      </div>
+    </footer>
+  </body>
+</html>

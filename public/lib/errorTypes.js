@@ -56,3 +56,16 @@ function CardinalityConstraintViolation( msg, culprit) {
 }
 CardinalityConstraintViolation.prototype = Object.create( ConstraintViolation.prototype);
 CardinalityConstraintViolation.prototype.constructor = CardinalityConstraintViolation;
+
+
+function ReferentialIntegrityConstraintViolation( msg, culprit) {
+    ConstraintViolation.call( this, msg, culprit);
+};
+ReferentialIntegrityConstraintViolation.prototype = Object.create( ConstraintViolation.prototype);
+ReferentialIntegrityConstraintViolation.prototype.constructor = ReferentialIntegrityConstraintViolation;
+
+function FrozenValueConstraintViolation( msg, culprit) {
+    ConstraintViolation.call( this, msg, culprit);
+};
+FrozenValueConstraintViolation.prototype = Object.create( ConstraintViolation.prototype);
+FrozenValueConstraintViolation.prototype.constructor = FrozenValueConstraintViolation;

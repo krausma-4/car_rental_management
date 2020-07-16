@@ -1,58 +1,90 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title>Handle your Car Rental</title>
     <meta name="description" content="A plain JS app with subtyping and inheritance in class hierarchiess.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Firebase SDK snippet -->
+    <!-- Firebase SDK snippet -->
     <script src="/__/firebase/7.14.5/firebase-app.js"></script>
     <script src="/__/firebase/7.14.5/firebase-firestore.js"></script>
     <!-- Initialize Firebase -->
     <script src="/__/firebase/init.js"></script>
+    <script src="/__/firebase/7.15.3/firebase-auth.js"></script>
 
-     <link rel="stylesheet" href="css/normalize.min.css"/>
-     <link rel="stylesheet" href="css/main.css"/>    
-    
+    <link rel="stylesheet" href="css/normalize.min.css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+    <script src="lib/browserShims.js"></script>
     <script src="lib/util.js"></script>
     <script src="lib/errorTypes.js"></script>
-    <script src="js/c/initialize.js"></script>
-    <script src="js/m/Car.js"></script>
+    <script src="lib/Enumeration.js"></script>
+    <script src="src/c/initialize.js"></script>
+    <script src="src/m/Car.js"></script>
+    <script src="src/m/Customer.js"></script>
+    <script src="src/m/RentalAgreement.js"></script>
+    <script src="src/v/authenticateUser.js"></script>
+    <script>
+        window.addEventListener("load", car_rental.v.authenticateUser.setupUiByUserStatus);
+    </script>
 
 </head>
+
 <body>
-  <header>
-    <div class ="wrapper clearfix">
-      <div class="title">    
-        <h1>Car Rental</h1>
-        <h2>This is your new online app for managing your car rentals</h2>
-  </header>
-  <main>
-  <div class="wrapper clearfix">
-      <p>For your car rental agency it is now possible to manage the following data sets for cars online:</p>
-      <div class="two-col-menu">
-        <ul class="menu">
-          <li><button tape="button" onclick="location.href='listCars.html';">List all cars</button></li>
-          <li><button type="button" onclick="location.href='createCar.html';">Create a Car</button></li>
-          <li><button tape="button" onclick="location.href='updateCar.html';">Update a Car</button></li>
-          <li><button tape="button" onclick="location.href='deleteCar.html';">Delete a Car</button></li>
-        </ul>
-        <p>For playing with the app, you may first want to
-          <button onclick="Car.generateTestData()" type="button">Generate test data</button> 
-              and then view it with <a href="listCars.html">
-                <button type="button">Retrieve and list all cars</button></a>. For observing the internal status and error messages, turn on the 
-                JavaScript console. You can also <button onclick="Car.clearData()" type="button"> Delete all cars </button>
-        </p>
-      </div>
-    </div>
-  </main>
- <footer>
-    <div class="foot-content wrapper">
-        This app was created following the tutorials of Prof.Dr. Gerd Wagner at
-        <a href="https://www.b-tu.de/fg-internet-technologie/">Chair of Internet Technology</a>,
-        Brandenburg University of Technology, Germany.
-       </div>
-   </footer>
+    <header>
+        <div class="wrapper clearfix">
+            <div class="title">
+                <h1>Car Rental</h1>
+                <h2>This is your new online app for managing your car rentals</h2>
+            </div>
+            <nav id="navi" style="display: none;">
+                <ul>
+                    <li><a href="manageCars.html">Cars</a></li>
+                    <li><a href="manageCustomers.html">Customers</a></li>
+                    <li><a href="manageRentalAgreement.html">Rental Agreements</a></li>
+                    <li><a href="manageInvoices.html">Invoices</a></li>
+
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="wrapper clearfix">
+            <p>For your car rental agency it is now possible to manage the following data sets online:</p>
+            <div class="two-col-menu">
+                <ul class="menu" role="menubar">
+                    <li id="opt-cars"><button type="button" onclick="location.href='manageCars.html';" role="menuitem" style=" opacity: 0.4;" disabled="disabled">Car data</button></li>
+                    <li id="opt-cust"><button tape="button" onclick="location.href='manageCustomers.html';" role="menuitem" style=" opacity: 0.4;" disabled="disabled">Customer data</button></li>
+                    <li id="opt-rent"><button tape="button" onclick="location.href='manageRentalAgreement.html';" role="menuitem" style=" opacity: 0.4;" disabled="disabled">Rental Agreements</button></li>
+                    <li id="opt-invoice"><button tape="button" onclick="location.href='manageInvoices.html';" role="menuitem" style=" opacity: 0.4;" disabled="disabled">Invoices</button></li>
+                </ul>
+                <ul class="menu" role="menubar">
+                    <li id="tool-generate"><button type="button" onclick="RentalAgreement.generateTestData()" style=" opacity: 0.4;" disabled="disabled">Generate test data</button></li>
+                    <li id="tool-clear"><button type="button" onclick="RentalAgreement.clearData()" style=" opacity: 0.4;" disabled="disabled">Clear database</button></li>
+                </ul>
+            </div>
+            <div id="auth-invitation">
+                <p id="before">To use all of the function our WebApp please create an account or log in with an existing one
+                    <button id="toLogInOrSignUp" type="button" onclick="location.href='authenticate.html'">Log in or Sign up</button>
+                </p>
+                <br>
+                <p id="after" style="display:none;">You can Log Out any time
+                    <button id="toSignOut" type="button" onclick="car_rental.v.authenticateUser.handleSignOutButtonClickEvent()">Sign Out</button></p>
+
+            </div>
+
+
+
+        </div>
+    </main>
+    <footer>
+        <div class="foot-content wrapper">
+            This app was created following the tutorials of Prof.Dr. Gerd Wagner at
+            <a href="https://www.b-tu.de/fg-internet-technologie/">Chair of Internet Technology</a>, Brandenburg University of Technology, Germany.
+        </div>
+    </footer>
 </body>
+
 </html>
